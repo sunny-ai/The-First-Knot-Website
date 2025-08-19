@@ -53,7 +53,7 @@ const Services = () => {
           {services.map((service, index) => (
             <div
               key={service.title}
-              className="bg-gradient-primary rounded-2xl p-8 shadow-soft hover-lift group"
+              className="bg-gradient-primary rounded-2xl p-8 shadow-soft hover-lift group border"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="w-16 h-16 bg-background/90 rounded-full flex items-center justify-center mb-6 group-hover:bg-background transition-colors duration-300">
@@ -79,7 +79,7 @@ const Services = () => {
               
               <Button 
                 variant="outline" 
-                className="w-full bg-background/80 border-foreground/20 text-foreground hover:bg-background group-hover:bg-accent group-hover:text-accent-foreground transition-all duration-300"
+                className="w-full bg-foreground text-background hover:bg-foreground/90 transition-all duration-300"
               >
                 Learn More
               </Button>
@@ -89,7 +89,7 @@ const Services = () => {
 
         {/* CTA Section */}
         <div className="text-center mt-16">
-          <div className="bg-gradient-secondary rounded-2xl p-12 shadow-elegant">
+          <div className="bg-gradient-secondary rounded-2xl p-12 shadow-elegant border">
             <h3 className="text-heading text-3xl mb-4 text-foreground">
               Ready to Plan Your Perfect Day?
             </h3>

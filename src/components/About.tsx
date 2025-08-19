@@ -39,9 +39,9 @@ const About = () => {
               </p>
             </div>
 
-            <div className="bg-background/60 backdrop-blur-sm rounded-2xl p-8 shadow-soft">
-              <h3 className="text-heading text-2xl mb-4 text-foreground">Our Vision</h3>
-              <p className="text-body text-foreground/80 leading-relaxed">
+            <div className="bg-foreground backdrop-blur-sm rounded-2xl p-8 shadow-soft border">
+              <h3 className="text-heading text-2xl mb-4 text-background">Our Vision</h3>
+              <p className="text-body text-background/80 leading-relaxed">
                 To craft meaningful and personalized celebrations that symbolize the beauty of togetherness, leaving a lasting impression for years to come.
               </p>
             </div>
@@ -52,16 +52,16 @@ const About = () => {
             {features.map((feature, index) => (
               <div
                 key={feature.title}
-                className="bg-background/80 backdrop-blur-sm rounded-2xl p-6 shadow-soft hover-lift"
+                className="bg-foreground backdrop-blur-sm rounded-2xl p-6 shadow-soft hover-lift border"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center mb-4">
-                  <feature.icon className="w-6 h-6 text-foreground" />
+                  <feature.icon className="w-6 h-6 text-background" />
                 </div>
-                <h4 className="text-heading text-xl mb-3 text-foreground">
+                <h4 className="text-heading text-xl mb-3 text-background">
                   {feature.title}
                 </h4>
-                <p className="text-body text-foreground/70">
+                <p className="text-body text-background/70">
                   {feature.description}
                 </p>
               </div>

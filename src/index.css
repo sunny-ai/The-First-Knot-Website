@@ -4,65 +4,65 @@
 
 @layer base {
   :root {
-    --background: 300 100% 97%; /* #FFE1FF */
-    --foreground: 248 39% 34%; /* #433878 */
+    --background: 207 28% 97%; /* Lighter shade for background */
+    --foreground: 207 28% 35%; /* #405D72 */
 
     --card: 0 0% 100%;
-    --card-foreground: 248 39% 34%;
+    --card-foreground: 207 28% 35%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 248 39% 34%;
+    --popover-foreground: 207 28% 35%;
 
-    --primary: 260 41% 56%; /* #7E60BF */
-    --primary-foreground: 0 0% 98%;
+    --primary: 207 28% 35%; /* #405D72 */
+    --primary-foreground: 0 0% 100%; /* #FFFFFF */
 
-    --secondary: 313 58% 92%; /* #F7DBF0 */
-    --secondary-foreground: 248 39% 34%;
+    --secondary: 207 28% 92%; /* Lighter shade */
+    --secondary-foreground: 207 28% 35%;
 
-    --muted: 313 58% 92%;
-    --muted-foreground: 248 39% 34%;
+    --muted: 207 28% 92%;
+    --muted-foreground: 207 28% 35%;
 
-    --accent: 313 58% 92%; /* #F7DBF0 */
-    --accent-foreground: 248 39% 34%;
+    --accent: 207 28% 92%; 
+    --accent-foreground: 207 28% 35%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 260 41% 56%;
-    --input: 313 58% 92%;
-    --ring: 260 41% 56%;
+    --border: 207 28% 35%;
+    --input: 207 28% 92%;
+    --ring: 207 28% 35%;
 
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 248 39% 34%;
-    --foreground: 300 100% 97%;
+    --background: 207 28% 20%; /* Darker background */
+    --foreground: 207 28% 97%; /* Lighter foreground */
 
-    --card: 225 15% 25%;
+    --card: 207 28% 25%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 248 39% 34%;
-    --popover-foreground: 300 100% 97%;
+    --popover: 207 28% 20%;
+    --popover-foreground: 207 28% 97%;
 
-    --primary: 260 41% 56%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 207 28% 35%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 313 58% 92%;
-    --secondary-foreground: 248 39% 34%;
+    --secondary: 207 28% 40%;
+    --secondary-foreground: 207 28% 97%;
 
-    --muted: 313 58% 92%;
+    --muted: 207 28% 40%;
     --muted-foreground: 0 0% 98%;
 
-    --accent: 313 58% 92%;
-    --accent-foreground: 248 39% 34%;
+    --accent: 207 28% 40%;
+    --accent-foreground: 207 28% 97%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 260 41% 56%;
-    --input: 313 58% 92%;
-    --ring: 260 41% 56%;
+    --border: 207 28% 35%;
+    --input: 207 28% 40%;
+    --ring: 207 28% 35%;
   }
 }
 
@@ -90,7 +90,7 @@
   @keyframes fadeInUp {
     from {
       opacity: 0;
-      transform: translateY(30px);
+      transform: translateY(20px);
     }
     to {
       opacity: 1;

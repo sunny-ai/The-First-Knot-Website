@@ -91,6 +91,14 @@ export default {
         'float': {
           '0%, 100%': { transform: 'translateY(0px)' },
           '50%': { transform: 'translateY(-10px)' },
+        },
+        'rotation': {
+          '0%': {
+            transform: 'rotate(0deg)'
+          },
+          '100%': {
+            transform: 'rotate(360deg)'
+          }
         }
 			},
 			animation: {
@@ -98,6 +106,7 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
         'fade-in-up': 'fade-in-up 0.5s ease-out',
         'float': 'float 3s ease-in-out infinite',
+        'rotation': 'rotation 8s infinite linear',
 			}
 		}
 	},

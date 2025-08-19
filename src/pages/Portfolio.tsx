@@ -83,7 +83,7 @@ const Portfolio = () => {
             {portfolioItems.map((item, index) => (
               <div
                 key={item.title}
-                className="bg-card rounded-2xl overflow-hidden shadow-soft hover-lift"
+                className="bg-card rounded-2xl overflow-hidden shadow-soft hover-lift border"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="aspect-[4/3] overflow-hidden">
@@ -126,7 +126,7 @@ const Portfolio = () => {
             {testimonials.map((testimonial, index) => (
               <div
                 key={testimonial.name}
-                className="bg-background/80 backdrop-blur-sm rounded-2xl p-8 shadow-soft"
+                className="bg-background/80 backdrop-blur-sm rounded-2xl p-8 shadow-soft border"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="flex mb-4">
@@ -154,7 +154,7 @@ const Portfolio = () => {
       {/* Stats Section */}
       <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="bg-gradient-secondary rounded-2xl p-12 shadow-elegant">
+          <div className="bg-gradient-secondary rounded-2xl p-12 shadow-elegant border">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
               <div className="flex flex-col items-center">
                 <Heart className="w-12 h-12 text-foreground mb-4" />
