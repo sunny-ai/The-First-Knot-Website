@@ -4,10 +4,8 @@ import heroImage from "@/assets/hero-wedding.jpg";
 const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-hero"></div>
-      
-      {/* Hero Image */}
+      {/* Background and Overlay */}
+      <div className="absolute inset-0 bg-background/80 backdrop-blur-sm"></div>
       <div className="absolute inset-0 opacity-30">
         <img 
           src={heroImage} 
@@ -15,15 +13,17 @@ const Hero = () => {
           className="w-full h-full object-cover"
         />
       </div>
-      
-      {/* Floating Elements */}
-      <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-primary rounded-full opacity-20 animate-float"></div>
-      <div className="absolute bottom-32 right-16 w-24 h-24 bg-gradient-secondary rounded-full opacity-30 animate-float" style={{animationDelay: '2s'}}></div>
-      <div className="absolute top-1/3 right-1/4 w-16 h-16 bg-accent/20 rounded-full animate-float" style={{animationDelay: '4s'}}></div>
+
+      {/* Falling Petals Animation */}
+      <div className="petals-container z-0">
+        {Array.from({ length: 10 }).map((_, i) => (
+          <div key={i} className="petal"></div>
+        ))}
+      </div>
       
       {/* Content */}
       <div className="relative z-10 text-center max-w-4xl mx-auto px-6 animate-fade-in-up">
-        <h1 className="text-display text-6xl md:text-8xl mb-6 text-foreground">
+        <h1 className="font-signature text-8xl md:text-9xl mb-6 text-foreground">
           The First Knot
         </h1>
         

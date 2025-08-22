@@ -79,7 +79,7 @@ const Services = () => {
               
               <Button 
                 variant="outline" 
-                className="w-full bg-foreground text-background hover:bg-foreground/90 transition-all duration-300"
+                className="w-full bg-foreground text-background hover:bg-foreground/90 hover:text-white transition-all duration-300"
               >
                 Learn More
               </Button>

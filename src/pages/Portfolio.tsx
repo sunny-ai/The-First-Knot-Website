@@ -65,7 +65,7 @@ const Portfolio = () => {
   return (
     <div className="pt-20">
       {/* Hero Section */}
-      <section className="py-20 bg-gradient-hero">
+      <section className="py-20 bg-background/80 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <h1 className="text-display text-5xl md:text-6xl mb-6 text-foreground">
             Our Portfolio
@@ -182,7 +182,7 @@ const Portfolio = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-gradient-hero">
+      <section className="py-20 bg-background/80 backdrop-blur-sm">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-display text-4xl md:text-5xl mb-6 text-foreground">
             Ready to Create Your Story?

@@ -20,6 +20,8 @@ export default {
 		extend: {
 			fontFamily: {
 				'inter': ['Inter', 'sans-serif'],
+        'playfair-display': ['"Playfair Display"', 'serif'],
+        'signature': ['"Parisienne"', 'cursive'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -99,6 +101,14 @@ export default {
           '100%': {
             transform: 'rotate(360deg)'
           }
+        },
+        'scroll': {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+        'fall': {
+          '0%': { transform: 'translateY(-100px) rotate(0deg)', opacity: '1' },
+          '100%': { transform: 'translateY(100vh) rotate(360deg)', opacity: '0' },
         }
 			},
 			animation: {
@@ -107,6 +117,7 @@ export default {
         'fade-in-up': 'fade-in-up 0.5s ease-out',
         'float': 'float 3s ease-in-out infinite',
         'rotation': 'rotation 8s infinite linear',
+        'scroll': 'scroll 40s linear infinite',
 			}
 		}
 	},
