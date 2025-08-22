@@ -53,11 +53,11 @@ const Services = () => {
           {services.map((service, index) => (
             <div
               key={service.title}
-              className="bg-gradient-primary rounded-2xl p-8 shadow-soft hover-lift group border"
+              className="bg-card rounded-2xl p-8 shadow-soft hover-lift group border"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="w-16 h-16 bg-background/90 rounded-full flex items-center justify-center mb-6 group-hover:bg-background transition-colors duration-300">
-                <service.icon className="w-8 h-8 text-foreground" />
+              <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors duration-300">
+                <service.icon className="w-8 h-8 text-primary" />
               </div>
               
               <h3 className="text-heading text-2xl mb-4 text-foreground">
@@ -71,7 +71,7 @@ const Services = () => {
               <ul className="space-y-2 mb-8">
                 {service.features.map((feature) => (
                   <li key={feature} className="text-body text-foreground/70 flex items-center">
-                    <div className="w-2 h-2 bg-accent rounded-full mr-3"></div>
+                    <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
                     {feature}
                   </li>
                 ))}
@@ -79,7 +79,7 @@ const Services = () => {
               
               <Button 
                 variant="outline" 
-                className="w-full bg-foreground text-background hover:bg-foreground/90 hover:text-white transition-all duration-300"
+                className="w-full"
               >
                 Learn More
               </Button>
@@ -89,7 +89,7 @@ const Services = () => {
 
         {/* CTA Section */}
         <div className="text-center mt-16">
-          <div className="bg-gradient-secondary rounded-2xl p-12 shadow-elegant border">
+          <div className="bg-secondary/50 rounded-2xl p-12 shadow-elegant border">
             <h3 className="text-heading text-3xl mb-4 text-foreground">
               Ready to Plan Your Perfect Day?
             </h3>

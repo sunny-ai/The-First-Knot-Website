@@ -25,7 +25,7 @@ const WhyChooseUs = () => {
   ];
 
   return (
-    <section className="py-20 bg-background/80 backdrop-blur-sm">
+    <section className="py-20 bg-secondary/30">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-16">
@@ -42,19 +42,19 @@ const WhyChooseUs = () => {
           {reasons.map((reason, index) => (
             <div
               key={reason.title}
-              className="bg-foreground backdrop-blur-sm rounded-2xl p-8 shadow-soft hover-lift border"
+              className="bg-card rounded-2xl p-8 shadow-soft hover-lift border"
               style={{ animationDelay: `${index * 0.15}s` }}
             >
               <div className="flex items-start space-x-6">
-                <div className="w-16 h-16 bg-background/10 rounded-full flex items-center justify-center flex-shrink-0">
-                  <reason.icon className="w-8 h-8 text-background" />
+                <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
+                  <reason.icon className="w-8 h-8 text-primary" />
                 </div>
                 
                 <div>
-                  <h3 className="text-heading text-2xl mb-4 text-background">
+                  <h3 className="text-heading text-2xl mb-4 text-foreground">
                     {reason.title}
                   </h3>
-                  <p className="text-body text-background/80 leading-relaxed">
+                  <p className="text-body text-foreground/80 leading-relaxed">
                     {reason.description}
                   </p>
                 </div>
@@ -64,27 +64,27 @@ const WhyChooseUs = () => {
         </div>
 
         {/* Stats Section */}
-        <div className="mt-20 bg-foreground backdrop-blur-sm rounded-2xl p-12 shadow-elegant border">
+        <div className="mt-20 bg-card rounded-2xl p-12 shadow-elegant border">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div className="flex flex-col items-center">
-              <Heart className="w-12 h-12 text-background mb-4" />
-              <div className="text-display text-4xl md:text-5xl mb-2 text-background">500+</div>
-              <div className="text-body text-background/70">Happy Couples</div>
+              <Heart className="w-12 h-12 text-primary mb-4" />
+              <div className="text-display text-4xl md:text-5xl mb-2 text-foreground">500+</div>
+              <div className="text-body text-foreground/70">Happy Couples</div>
             </div>
             <div className="flex flex-col items-center">
-              <Calendar className="w-12 h-12 text-background mb-4" />
-              <div className="text-display text-4xl md:text-5xl mb-2 text-background">1000+</div>
-              <div className="text-body text-background/70">Events Completed</div>
+              <Calendar className="w-12 h-12 text-primary mb-4" />
+              <div className="text-display text-4xl md:text-5xl mb-2 text-foreground">1000+</div>
+              <div className="text-body text-foreground/70">Events Completed</div>
             </div>
             <div className="flex flex-col items-center">
-              <Users className="w-12 h-12 text-background mb-4" />
-              <div className="text-display text-4xl md:text-5xl mb-2 text-background">5+</div>
-              <div className="text-body text-background/70">Years Experience</div>
+              <Users className="w-12 h-12 text-primary mb-4" />
+              <div className="text-display text-4xl md:text-5xl mb-2 text-foreground">5+</div>
+              <div className="text-body text-foreground/70">Years Experience</div>
             </div>
             <div className="flex flex-col items-center">
-              <Star className="w-12 h-12 text-background mb-4" />
-              <div className="text-display text-4xl md:text-5xl mb-2 text-background">98%</div>
-              <div className="text-body text-background/70">Client Satisfaction</div>
+              <Star className="w-12 h-12 text-primary mb-4" />
+              <div className="text-display text-4xl md:text-5xl mb-2 text-foreground">98%</div>
+              <div className="text-body text-foreground/70">Client Satisfaction</div>
             </div>
           </div>
         </div>

@@ -4,65 +4,66 @@
 
 @layer base {
   :root {
-    --background: 207 28% 97%; /* Lighter shade for background */
-    --foreground: 207 28% 35%; /* #405D72 */
+    --background: 350 100% 99%; /* Very Light Pink */
+    --foreground: 350 50% 20%; /* Dark, soft red */
 
     --card: 0 0% 100%;
-    --card-foreground: 207 28% 35%;
+    --card-foreground: 350 50% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 207 28% 35%;
+    --popover-foreground: 350 50% 20%;
 
-    --primary: 207 28% 35%; /* #405D72 */
-    --primary-foreground: 0 0% 100%; /* #FFFFFF */
+    --primary: 345 100% 60%; /* Bright Pink */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 207 28% 92%; /* Lighter shade */
-    --secondary-foreground: 207 28% 35%;
+    --secondary: 350 100% 95%; /* Lighter Pink */
+    --secondary-foreground: 350 50% 20%;
 
-    --muted: 207 28% 92%;
-    --muted-foreground: 207 28% 35%;
+    --muted: 350 100% 97%;
+    --muted-foreground: 350 50% 40%;
 
-    --accent: 207 28% 92%; 
-    --accent-foreground: 207 28% 35%;
+    --accent: 345 100% 60%; 
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 207 28% 35%;
-    --input: 207 28% 92%;
-    --ring: 207 28% 35%;
+    --border: 350 100% 90%;
+    --input: 350 100% 95%;
+    --ring: 345 100% 60%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
   }
 
   .dark {
-    --background: 207 28% 20%; /* Darker background */
-    --foreground: 207 28% 97%; /* Lighter foreground */
+    /* A dark theme variation of the new palette */
+    --background: 350 50% 10%;
+    --foreground: 350 100% 98%;
 
-    --card: 207 28% 25%;
-    --card-foreground: 0 0% 98%;
+    --card: 350 50% 15%;
+    --card-foreground: 350 100% 98%;
 
-    --popover: 207 28% 20%;
-    --popover-foreground: 207 28% 97%;
+    --popover: 350 50% 10%;
+    --popover-foreground: 350 100% 98%;
 
-    --primary: 207 28% 35%;
+    --primary: 345 100% 60%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 207 28% 40%;
-    --secondary-foreground: 207 28% 97%;
+    --secondary: 350 100% 20%;
+    --secondary-foreground: 350 100% 98%;
 
-    --muted: 207 28% 40%;
-    --muted-foreground: 0 0% 98%;
+    --muted: 350 100% 25%;
+    --muted-foreground: 350 100% 80%;
 
-    --accent: 207 28% 40%;
-    --accent-foreground: 207 28% 97%;
+    --accent: 345 100% 60%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 207 28% 35%;
-    --input: 207 28% 40%;
-    --ring: 207 28% 35%;
+    --border: 350 100% 30%;
+    --input: 350 100% 25%;
+    --ring: 345 100% 60%;
   }
 }
 
@@ -71,7 +72,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-inter;
+    @apply bg-background text-foreground font-inter antialiased;
   }
   .text-display {
     @apply font-playfair-display;
@@ -91,61 +92,7 @@
   }
 
   .hover-lift {
-    @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-lg;
-  }
-
-  .scrolling-headline-container {
-    @apply w-full overflow-hidden whitespace-nowrap py-4 border-y border-border bg-foreground text-background;
-  }
-  
-  .scrolling-headline {
-    @apply flex animate-scroll;
-  }
-  
-  .headline-item {
-    @apply flex items-center text-lg md:text-xl font-semibold uppercase tracking-wider mx-8;
-  }
-
-  /* Falling Petals Animation */
-  .petals-container {
-    @apply absolute inset-0 overflow-hidden pointer-events-none;
-  }
-
-  .petal {
-    @apply absolute bg-pink-300 rounded-full opacity-70;
-    animation: fall linear infinite;
-  }
-
-  /* Different sizes and animation durations for variety */
-  .petal:nth-child(1) { @apply w-4 h-3 left-[10%]; animation-delay: -7s; animation-duration: 10s; }
-  .petal:nth-child(2) { @apply w-3 h-2 left-[20%]; animation-delay: -5s; animation-duration: 12s; }
-  .petal:nth-child(3) { @apply w-5 h-4 left-[30%]; animation-delay: -10s; animation-duration: 9s; }
-  .petal:nth-child(4) { @apply w-4 h-3 left-[40%]; animation-delay: -3s; animation-duration: 11s; }
-  .petal:nth-child(5) { @apply w-3 h-2 left-[50%]; animation-delay: -8s; animation-duration: 15s; }
-  .petal:nth-child(6) { @apply w-5 h-4 left-[60%]; animation-delay: -6s; animation-duration: 8s; }
-  .petal:nth-child(7) { @apply w-4 h-3 left-[70%]; animation-delay: -1s; animation-duration: 13s; }
-  .petal:nth-child(8) { @apply w-3 h-2 left-[80%]; animation-delay: -9s; animation-duration: 10s; }
-  .petal:nth-child(9) { @apply w-5 h-4 left-[90%]; animation-delay: -2s; animation-duration: 14s; }
-  .petal:nth-child(10) { @apply w-4 h-3 left-[15%]; animation-delay: -4s; animation-duration: 9s; }
-
-  /* Color Palette Styling */
-  .palette-container {
-    @apply h-40 w-full rounded-lg overflow-hidden shadow-inner font-sans;
-  }
-  .palette {
-    @apply flex h-full w-full;
-  }
-  .color {
-    @apply h-full flex-1 flex items-center justify-center text-white font-semibold tracking-wider transition-all duration-100 ease-linear;
-  }
-  .color span {
-    @apply opacity-0 transition-opacity duration-100 ease-linear;
-  }
-  .color:hover {
-    @apply flex-grow-[2] shadow-lg;
-  }
-  .color:hover span {
-    @apply opacity-100;
+    @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-primary/10;
   }
 }
 

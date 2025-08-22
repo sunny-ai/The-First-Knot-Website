@@ -15,10 +15,10 @@ const ScrollingHeadline = () => {
   const duplicatedHeadlines = [...headlines, ...headlines];
 
   return (
-    <div className="scrolling-headline-container">
-      <div className="scrolling-headline">
+    <div className="bg-secondary text-primary py-4 overflow-hidden whitespace-nowrap">
+      <div className="flex animate-scroll">
         {duplicatedHeadlines.map((text, index) => (
-          <div key={index} className="headline-item">
+          <div key={index} className="flex items-center text-lg md:text-xl font-semibold uppercase tracking-wider mx-8">
             {text}
           </div>
         ))}
