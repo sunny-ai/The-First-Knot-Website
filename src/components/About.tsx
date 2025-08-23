@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Heart, Sparkles, Users, Award } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const About = () => {
   const features = [
@@ -10,7 +11,7 @@ const About = () => {
     },
     {
       icon: Sparkles,
-      title: "Creative Excellence", 
+      title: "Creative Excellence",
       description: "Unique designs that reflect your personal story and style"
     },
     {
@@ -37,7 +38,9 @@ const About = () => {
               <p className="text-body text-lg text-muted-foreground">
                 Love is in the air, and it's always romantic and in abundance in this magical city. It's a love that we want to share with people. So it's our dream to create a fragrance that is carefully, painstakingly curated to capture the essence of your perfect romance.
               </p>
-              <Button variant="link" className="text-primary px-0">Our Story</Button>
+              <Link to="/about">
+                <Button variant="link" className="text-primary px-0">Our Story</Button>
+              </Link>
             </div>
             <div className="relative lg:order-1">
               <div className="aspect-square rounded-3xl overflow-hidden shadow-2xl shadow-primary/10">

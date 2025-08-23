@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Heart } from "lucide-react";
+import { Link } from "react-router-dom";
 import heroVideo from "@/assets/hero-video.mp4"; // Import the local video
 
 const Hero = () => {
@@ -23,14 +24,16 @@ const Hero = () => {
               Inspired by Romance
             </div>
             <h1 className="text-display text-5xl md:text-7xl font-bold text-foreground leading-tight">
-              Enticing & Elegant Weddings
+              Your First Knot to Forever
             </h1>
             <p className="text-body text-lg text-muted-foreground max-w-lg">
               A fragrance meant to be an invitation, lure, and addiction. For the woman who is a charmer, confident, and ready to stun with this lovely scent.
             </p>
-            <Button size="lg" className="rounded-full px-8 py-6 text-lg">
-              Explore <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
+            <Link to="/style-quiz" className="mt-4 inline-block">
+              <Button size="lg" className="rounded-full px-8 py-6 text-lg">
+                Find Your Wedding Style <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
           </div>
 
           {/* Right Video Card */}

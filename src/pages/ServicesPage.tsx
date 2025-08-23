@@ -1,6 +1,7 @@
 import { Gift, Mail, Flower, Home, Calendar as CalendarIcon, ArrowRight, Star, PencilRuler, Coffee, Map, Wine, Film, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 
 const ServicesPage = () => {
   const primaryServices = [
@@ -177,7 +178,7 @@ const ServicesPage = () => {
           </div>
         </div>
       </section>
-      
+
       {/* CTA Section */}
       <section className="py-20 bg-secondary/30">
         <div className="max-w-4xl mx-auto px-6 text-center">
@@ -187,9 +188,11 @@ const ServicesPage = () => {
           <p className="text-body text-xl text-foreground/80 mb-8">
             Let us bring your vision to life with our expertise and attention to detail. Contact us today for a free consultation.
           </p>
-          <Button className="btn-primary text-lg px-12 py-4">
-            Get Your Free Consultation
-          </Button>
+          <Link to="/contact">
+            <Button className="btn-primary text-lg px-12 py-4">
+              Get Your Free Consultation
+            </Button>
+          </Link>
         </div>
       </section>
     </div>

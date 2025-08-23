@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Heart, Star, Calendar, Users } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Portfolio = () => {
   const portfolioItems = [
@@ -190,9 +191,11 @@ const Portfolio = () => {
           <p className="text-body text-xl text-foreground/80 mb-8">
             Let's discuss how we can make your special day absolutely perfect
           </p>
-          <Button className="btn-primary text-lg px-12 py-4">
-            Start Planning Today
-          </Button>
+          <Link to="/contact">
+            <Button className="btn-primary text-lg px-12 py-4">
+              Start Planning Today
+            </Button>
+          </Link>
         </div>
       </section>
     </div>

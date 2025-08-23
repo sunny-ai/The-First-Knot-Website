@@ -5,6 +5,8 @@ import { ArrowRight, PartyPopper, Mail } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Label } from '@/components/ui/label';
+import { Link } from 'react-router-dom';
+import { Textarea } from '@/components/ui/textarea';
 
 const quizQuestions = [
   {
@@ -195,10 +197,10 @@ const StyleQuizPage = () => {
                         {styleResults[finalResultStyle].palette.map(color => (
                           <div
                             key={color.name}
-                            className="color"
+                            className="color group"
                             style={{ backgroundColor: color.hex }}
                           >
-                            <span>{color.hex.replace('#', '')}</span>
+                            <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-100">{color.hex.replace('#', '')}</span>
                           </div>
                         ))}
                       </div>
@@ -207,8 +209,8 @@ const StyleQuizPage = () => {
                   
                   <div className="grid md:grid-cols-2 gap-8">
                     <Card className="p-6">
-                      <h3 className="text-heading text-xl mb-4 text-foreground">Key Elements:</h3>
-                      <ul className="list-disc list-inside space-y-2 text-body text-foreground/80">
+                      <h3 className="text-heading text-xl mb-4 text-foreground text-center">Key Elements:</h3>
+                      <ul className="list-disc list-inside space-y-2 text-body text-foreground/80 text-left">
                         {styleResults[finalResultStyle].elements.map(item => <li key={item}>{item}</li>)}
                       </ul>
                     </Card>
@@ -222,14 +224,13 @@ const StyleQuizPage = () => {
 
                 <Card className="w-full max-w-lg p-6 bg-secondary/50 border-secondary text-center">
                   <h3 className="text-heading text-xl mb-4 text-foreground">Get Your Personalized Style Guide!</h3>
-                  <Button onClick={() => setIsFormOpen(true)}>
-                    <Mail className="mr-2 h-4 w-4" /> Send My Results
-                  </Button>
+                  <div className="flex gap-4 mt-4 justify-center">
+                    <Button onClick={() => setIsFormOpen(true)}>
+                      <Mail className="mr-2 h-4 w-4" /> Send My Results
+                    </Button>
+                    <Button onClick={restartQuiz} variant="outline">Try Again</Button>
+                  </div>
                 </Card>
-                <div className="flex gap-4 mt-8">
-                  <Button onClick={restartQuiz} variant="outline">Try Again</Button>
-                  <Button>Explore Our Portfolio <ArrowRight className="ml-2 h-4 w-4" /></Button>
-                </div>
               </div>
             )}
           </CardContent>
@@ -238,27 +239,31 @@ const StyleQuizPage = () => {
 
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
         <DialogContent>
-          <DialogHeader>
+          <DialogHeader className="text-left">
             <DialogTitle>Get Your Style Guide</DialogTitle>
             <DialogDescription>
               Enter your details below and we'll send your personalized wedding style guide right to your inbox.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
-                Name
-              </Label>
-              <Input id="name" className="col-span-3" />
+            <div className="grid gap-2">
+              <Label htmlFor="name">Name</Label>
+              <Input id="name" />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="email" className="text-right">
-                Email
-              </Label>
-              <Input id="email" type="email" className="col-span-3" />
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="phone">Contact Number</Label>
+              <Input id="phone" type="tel" />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="address">Address</Label>
+              <Textarea id="address" />
             </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className="justify-center">
             <DialogClose asChild>
               <Button type="submit">Send to My Email</Button>
             </DialogClose>

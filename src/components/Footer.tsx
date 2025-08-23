@@ -1,4 +1,5 @@
 import { Heart, Phone, Mail, MapPin, Instagram, Facebook, Twitter } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -31,11 +32,19 @@ const Footer = () => {
           <div>
             <h4 className="text-heading text-lg font-semibold mb-6">Quick Links</h4>
             <ul className="space-y-3">
-              {["About Us", "Services", "Portfolio", "Testimonials", "Contact"].map((link) => (
-                <li key={link}>
-                  <a href="#" className="text-body text-foreground/70 hover:text-primary transition-colors duration-200">
-                    {link}
-                  </a>
+              {[
+                { name: "About Us", href: "/about" },
+                { name: "Services", href: "/services" },
+                { name: "Portfolio", href: "/portfolio" },
+                { name: "Contact", href: "/contact" },
+              ].map((link) => (
+                <li key={link.name}>
+                  <Link
+                    to={link.href}
+                    className="text-body text-foreground/70 hover:text-primary transition-colors duration-200"
+                  >
+                    {link.name}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -53,10 +62,6 @@ const Footer = () => {
                 <Mail className="w-5 h-5 text-primary mr-3" />
                 <span className="text-body text-foreground/80">hello@thefirstknot.com</span>
               </div>
-              <div className="flex items-start">
-                <MapPin className="w-5 h-5 text-primary mr-3 mt-1" />
-                <span className="text-body text-foreground/80">123 Wedding Street, Love City, LC 12345</span>
-              </div>
             </div>
           </div>
         </div>
@@ -68,12 +73,12 @@ const Footer = () => {
               © 2024 The First Knot. All rights reserved.
             </p>
             <div className="flex space-x-6">
-              <a href="#" className="text-body text-foreground/70 hover:text-primary transition-colors duration-200">
+              <Link to="#" className="text-body text-foreground/70 hover:text-primary transition-colors duration-200">
                 Privacy Policy
-              </a>
-              <a href="#" className="text-body text-foreground/70 hover:text-primary transition-colors duration-200">
+              </Link>
+              <Link to="#" className="text-body text-foreground/70 hover:text-primary transition-colors duration-200">
                 Terms of Service
-              </a>
+              </Link>
             </div>
           </div>
         </div>

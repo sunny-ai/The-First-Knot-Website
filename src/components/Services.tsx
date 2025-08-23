@@ -1,5 +1,6 @@
 import { Gift, Mail, Flower, Home, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Services = () => {
   const services = [
@@ -59,15 +60,15 @@ const Services = () => {
               <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors duration-300">
                 <service.icon className="w-8 h-8 text-primary" />
               </div>
-              
+
               <h3 className="text-heading text-2xl mb-4 text-foreground">
                 {service.title}
               </h3>
-              
+
               <p className="text-body text-foreground/80 mb-6 leading-relaxed">
                 {service.description}
               </p>
-              
+
               <ul className="space-y-2 mb-8">
                 {service.features.map((feature) => (
                   <li key={feature} className="text-body text-foreground/70 flex items-center">
@@ -89,9 +90,11 @@ const Services = () => {
             <p className="text-body text-xl text-foreground/80 mb-8 max-w-2xl mx-auto">
               Let us bring your vision to life with our expertise and attention to detail
             </p>
-            <Button className="btn-primary text-lg px-12 py-4">
-              Get Your Free Consultation
-            </Button>
+            <Link to="/contact">
+              <Button className="btn-primary text-lg px-12 py-4">
+                Get Your Free Consultation
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

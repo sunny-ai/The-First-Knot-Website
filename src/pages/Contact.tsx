@@ -182,13 +182,7 @@ const Contact = () => {
                         <div className="text-foreground/70">hello@thefirstknot.com</div>
                       </div>
                     </div>
-                    <div className="flex items-start">
-                      <MapPin className="w-6 h-6 text-accent mr-4 mt-1" />
-                      <div>
-                        <div className="font-medium text-foreground">Visit Our Studio</div>
-                        <div className="text-foreground/70">123 Wedding Street<br />Love City, LC 12345</div>
-                      </div>
-                    </div>
+                    
                     <div className="flex items-center">
                       <Clock className="w-6 h-6 text-accent mr-4" />
                       <div>
@@ -216,18 +210,7 @@ const Contact = () => {
                 </CardContent>
               </Card>
 
-              <Card className="shadow-soft">
-                <CardHeader>
-                  <CardTitle className="text-heading text-2xl text-foreground">
-                    Quick Response Guarantee
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-body text-foreground/80">
-                    We understand that planning your special day is time-sensitive. That's why we guarantee a response within 24 hours to all inquiries.
-                  </p>
-                </CardContent>
-              </Card>
+              
             </div>
           </div>
         </div>
