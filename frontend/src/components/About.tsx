@@ -33,18 +33,23 @@ const About = () => {
           {/* Romance Section */}
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-4 lg:order-2">
-              <p className="text-primary font-semibold">Inspired by</p>
+              <div className="inline-block bg-secondary px-4 py-2 rounded-full text-sm font-medium text-primary">
+                Inspired by
+              </div>
               <h2 className="text-display text-5xl md:text-6xl text-foreground">Romance</h2>
               <p className="text-body text-lg text-muted-foreground">
                 Love is in the air, and it's always romantic and in abundance in this magical city. It's a love that we want to share with people. So it's our dream to create a fragrance that is carefully, painstakingly curated to capture the essence of your perfect romance.
               </p>
-              <Link to="/about">
-                <Button variant="link" className="text-primary px-0">Our Story</Button>
+
+              <Link to="/about" className="mt-4 inline-block">
+                <Button size="lg" className="rounded-full px-8 py-6 text-lg">
+                  Our Story
+                </Button>
               </Link>
             </div>
             <div className="relative lg:order-1">
               <div className="aspect-square rounded-3xl overflow-hidden shadow-2xl shadow-primary/10">
-                <img src="https://plus.unsplash.com/premium_photo-1661443876612-413f24e37f8f?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Romantic couple illustration" className="w-full h-full object-cover"/>
+                <img src="https://plus.unsplash.com/premium_photo-1661443876612-413f24e37f8f?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Romantic couple illustration" className="w-full h-full object-cover" />
               </div>
             </div>
           </div>

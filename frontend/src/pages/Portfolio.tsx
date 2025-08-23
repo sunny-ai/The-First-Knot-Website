@@ -1,67 +1,42 @@
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Heart, Star, Calendar, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const Portfolio = () => {
-  const portfolioItems = [
-    {
-      title: "Elegant Garden Wedding",
-      category: "Full Wedding Planning",
-      description: "A dreamy outdoor celebration with cascading florals and romantic lighting",
-      image: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=600&fit=crop"
-    },
-    {
-      title: "Royal Palace Reception",
-      category: "Venue Decoration",
-      description: "Luxurious ballroom transformation with crystal chandeliers and gold accents",
-      image: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800&h=600&fit=crop"
-    },
-    {
-      title: "Traditional Mehndi Celebration",
-      category: "Cultural Events",
-      description: "Vibrant celebration with traditional decor and custom mehndi favors",
-      image: "https://images.unsplash.com/photo-1606800052052-a08af7148866?w=800&h=600&fit=crop"
-    },
-    {
-      title: "Intimate Beach Ceremony",
-      category: "Destination Wedding",
-      description: "Seaside romance with custom invitations and personalized favors",
-      image: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800&h=600&fit=crop"
-    },
-    {
-      title: "Modern City Wedding",
-      category: "Contemporary Style",
-      description: "Sleek urban celebration with minimalist elegance and bold florals",
-      image: "https://images.unsplash.com/photo-1465495976277-4387d4b0e4a6?w=800&h=600&fit=crop"
-    },
-    {
-      title: "Vintage Barn Wedding",
-      category: "Rustic Romance",
-      description: "Charming countryside celebration with vintage decor and custom stationery",
-      image: "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=800&h=600&fit=crop"
-    }
-  ];
+interface PortfolioItem {
+  id: number;
+  title: string;
+  category: string;
+  description: string;
+  image: string;
+}
 
-  const testimonials = [
-    {
-      name: "Sarah & Michael",
-      event: "Garden Wedding 2024",
-      text: "The First Knot made our dream wedding come true. Every detail was perfect, from the stunning invitations to the magical decorations.",
-      rating: 5
-    },
-    {
-      name: "Priya & Arjun",
-      event: "Traditional Celebration 2024",
-      text: "They beautifully blended our cultural traditions with modern elegance. The mehndi favors were absolutely stunning!",
-      rating: 5
-    },
-    {
-      name: "Emma & James",
-      event: "Beach Wedding 2023",
-      text: "Professional, creative, and so attentive to our vision. Our guests are still talking about how beautiful everything was.",
-      rating: 5
-    }
-  ];
+interface Testimonial {
+  id: number;
+  name: string;
+  event: string;
+  text: string;
+  rating: number;
+}
+
+const Portfolio = () => {
+  const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    // Fetch Portfolio Items
+    fetch(`${API_URL}/api/portfolio/`)
+      .then((response) => response.json())
+      .then((data) => setPortfolioItems(data))
+      .catch((error) => console.error("Error fetching portfolio items:", error));
+
+    // Fetch Testimonials
+    fetch(`${API_URL}/api/testimonials/`)
+      .then((response) => response.json())
+      .then((data) => setTestimonials(data))
+      .catch((error) => console.error("Error fetching testimonials:", error));
+  }, [API_URL]);
 
   return (
     <div className="pt-20">
@@ -83,13 +58,13 @@ const Portfolio = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {portfolioItems.map((item, index) => (
               <div
-                key={item.title}
+                key={item.id}
                 className="bg-card rounded-2xl overflow-hidden shadow-soft hover-lift border"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="aspect-[4/3] overflow-hidden">
                   <img
-                    src={item.image}
+                    src={`${API_URL}${item.image}`}
                     alt={item.title}
                     className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                   />
@@ -126,7 +101,7 @@ const Portfolio = () => {
           <div className="grid md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
               <div
-                key={testimonial.name}
+                key={testimonial.id}
                 className="bg-background/80 backdrop-blur-sm rounded-2xl p-8 shadow-soft border"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >

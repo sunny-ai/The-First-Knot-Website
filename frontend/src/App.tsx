@@ -13,6 +13,8 @@ import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 import BackToTopButton from "@/components/BackToTopButton";
 import StyleQuizPage from "./pages/StyleQuizPage";
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const queryClient = new QueryClient();
 
@@ -22,7 +24,12 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Navigation />
+        {/* The regular Navigation and Footer will not render on admin routes */}
+        <Routes>
+          <Route path="/admin/*" element={null} />
+          <Route path="*" element={<Navigation />} />
+        </Routes>
+        
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<AboutPage />} />
@@ -30,11 +37,19 @@ const App = () => (
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/style-quiz" element={<StyleQuizPage />} />
+          
+          {/* Admin Routes */}
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-        <Footer />
-        <BackToTopButton />
+
+        <Routes>
+          <Route path="/admin/*" element={null} />
+          <Route path="*" element={<><Footer /><BackToTopButton /></>} />
+        </Routes>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

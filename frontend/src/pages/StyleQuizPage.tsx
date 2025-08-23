@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Label } from '@/components/ui/label';
 import { Link } from 'react-router-dom';
 import { Textarea } from '@/components/ui/textarea';
+import { useToast } from "@/hooks/use-toast";
 
 const quizQuestions = [
   {
@@ -118,6 +119,17 @@ const StyleQuizPage = () => {
   });
   const [showResult, setShowResult] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const { toast } = useToast();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+  });
+
+  const handleChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
   const handleAnswer = (style: keyof typeof scores) => {
     setScores(prev => ({ ...prev, [style]: prev[style] + 1 }));
@@ -132,6 +144,43 @@ const StyleQuizPage = () => {
   const getResult = () => {
     return Object.keys(scores).reduce((a, b) => scores[a as keyof typeof scores] > scores[b as keyof typeof scores] ? a : b);
   };
+  
+  const finalResultStyle = getResult() as keyof typeof styleResults;
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const submissionData = { ...formData, style: finalResultStyle };
+
+    fetch(`${import.meta.env.VITE_API_URL}/api/style-quiz/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submissionData),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        toast({
+          title: "Style Guide Sent!",
+          description: "Check your inbox for your personalized wedding style guide.",
+        });
+        setFormData({ name: "", email: "", phone: "", address: ""});
+        setIsFormOpen(false);
+    })
+    .catch(error => {
+        toast({
+          title: "Error!",
+          description: "There was a problem sending your results. Please try again later.",
+          variant: "destructive",
+        });
+        console.error('Error submitting form:', error);
+    });
+  };
 
   const restartQuiz = () => {
     setCurrentQuestion(0);
@@ -143,8 +192,6 @@ const StyleQuizPage = () => {
     });
     setShowResult(false);
   }
-
-  const finalResultStyle = getResult() as keyof typeof styleResults;
 
   return (
     <div className="py-20 md:py-32 bg-background">
@@ -239,6 +286,7 @@ const StyleQuizPage = () => {
 
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
         <DialogContent>
+        <form onSubmit={handleSubmit}>
           <DialogHeader className="text-left">
             <DialogTitle>Get Your Style Guide</DialogTitle>
             <DialogDescription>
@@ -248,26 +296,25 @@ const StyleQuizPage = () => {
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="name">Name</Label>
-              <Input id="name" />
+              <Input id="name" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} required />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" />
+              <Input id="email" type="email" value={formData.email} onChange={(e) => handleChange("email", e.target.value)} required/>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="phone">Contact Number</Label>
-              <Input id="phone" type="tel" />
+              <Input id="phone" type="tel" value={formData.phone} onChange={(e) => handleChange("phone", e.target.value)} />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="address">Address</Label>
-              <Textarea id="address" />
+              <Textarea id="address" value={formData.address} onChange={(e) => handleChange("address", e.target.value)} />
             </div>
           </div>
           <DialogFooter className="justify-center">
-            <DialogClose asChild>
               <Button type="submit">Send to My Email</Button>
-            </DialogClose>
           </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
     </div>

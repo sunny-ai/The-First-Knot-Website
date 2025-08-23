@@ -14,29 +14,47 @@ const Contact = () => {
     name: "",
     email: "",
     phone: "",
-    eventDate: "",
-    eventType: "",
+    event_date: "",
+    event_type: "",
     message: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast({
-      title: "Message Sent!",
-      description: "Thank you for reaching out. We'll get back to you within 24 hours.",
-    });
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      eventDate: "",
-      eventType: "",
-      message: ""
-    });
-  };
-
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    fetch(`${import.meta.env.VITE_API_URL}/api/contact/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        toast({
+          title: "Message Sent!",
+          description: "Thank you for reaching out. We'll get back to you within 24 hours.",
+        });
+        setFormData({
+            name: "", email: "", phone: "", event_date: "", event_type: "", message: ""
+        });
+    })
+    .catch(error => {
+        toast({
+          title: "Error!",
+          description: "There was a problem sending your message. Please try again later.",
+          variant: "destructive",
+        });
+        console.error('Error submitting form:', error);
+    });
   };
 
   return (
@@ -112,8 +130,8 @@ const Contact = () => {
                       </label>
                       <Input
                         type="date"
-                        value={formData.eventDate}
-                        onChange={(e) => handleChange("eventDate", e.target.value)}
+                        value={formData.event_date}
+                        onChange={(e) => handleChange("event_date", e.target.value)}
                         className="bg-background/80 border-foreground/20"
                       />
                     </div>
@@ -123,7 +141,7 @@ const Contact = () => {
                     <label className="block text-foreground font-medium mb-2">
                       Type of Event
                     </label>
-                    <Select value={formData.eventType} onValueChange={(value) => handleChange("eventType", value)}>
+                    <Select value={formData.event_type} onValueChange={(value) => handleChange("event_type", value)}>
                       <SelectTrigger className="bg-background/80 border-foreground/20">
                         <SelectValue placeholder="Select your event type" />
                       </SelectTrigger>

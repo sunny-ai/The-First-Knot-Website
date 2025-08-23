@@ -44,7 +44,9 @@ const AboutPage = () => {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-4">
-              <p className="text-primary font-semibold">Our Story</p>
+              <div className="inline-block bg-secondary px-4 py-2 rounded-full text-sm font-medium text-primary">
+                Our Story
+              </div>
               <h2 className="text-display text-5xl md:text-6xl text-foreground">Inspired by Romance</h2>
               <p className="text-body text-lg text-muted-foreground">
                 The First Knot was born from a passion for celebrating love in its purest form. We believe that every couple has a unique story, and every celebration should be a reflection of that story. Our journey began with a simple idea: to create beautiful, meaningful, and unforgettable wedding experiences that blend elegance, creativity, and cultural richness.
