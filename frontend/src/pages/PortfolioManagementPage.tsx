@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Card, CardContent } from "@/components/ui/card";
 import { PlusCircle, MoreHorizontal, Trash2, Edit } from "lucide-react";
 import {
   DropdownMenu,
@@ -13,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import AdminSidebar from "@/components/AdminSidebar";
 import AdminHeader from "@/components/AdminHeader";
 import PortfolioForm from "./PortfolioForm";
+import { useToast } from "@/hooks/use-toast";
 
 const categories = [
   "All",
@@ -30,14 +30,32 @@ const PortfolioManagementPage = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [categoryFilter, setCategoryFilter] = useState("All");
+  const { toast } = useToast();
   const API_URL = import.meta.env.VITE_API_URL;
 
   const fetchPortfolioItems = () => {
+    if (!API_URL) {
+      console.error("VITE_API_URL is not set. Please check your frontend/.env file.");
+      return;
+    }
     fetch(`${API_URL}/api/portfolio/`)
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
       .then((data) => {
         setPortfolioItems(data);
         setFilteredItems(data);
+      })
+      .catch(error => {
+        console.error("Error fetching portfolio items:", error);
+        toast({
+            title: "Error Fetching Portfolio",
+            description: "Could not load portfolio items from the server.",
+            variant: "destructive"
+        })
       });
   };
 
@@ -61,11 +79,19 @@ const PortfolioManagementPage = () => {
   };
 
   const handleDelete = (id) => {
-    fetch(`${API_URL}/api/portfolio/${id}/`, {
-      method: 'DELETE',
-    }).then(() => {
-      fetchPortfolioItems();
-    });
+    fetch(`${API_URL}/api/portfolio/${id}/`, { method: 'DELETE' })
+        .then((response) => {
+            if (response.ok) {
+                toast({ title: "Success", description: "Portfolio item deleted." });
+                fetchPortfolioItems();
+            } else {
+                throw new Error('Failed to delete item.');
+            }
+        })
+        .catch(error => {
+            console.error("Error deleting item:", error);
+            toast({ title: "Error", description: "Could not delete portfolio item.", variant: "destructive" });
+        });
   };
 
   return (
@@ -85,9 +111,7 @@ const PortfolioManagementPage = () => {
                   <SelectValue placeholder="Filter by category" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.map(category => (
-                    <SelectItem key={category} value={category}>{category}</SelectItem>
-                  ))}
+                  {categories.map(category => <SelectItem key={category} value={category}>{category}</SelectItem>)}
                 </SelectContent>
               </Select>
               <Button onClick={() => { setSelectedItem(null); setIsFormOpen(true); }}>
@@ -100,7 +124,7 @@ const PortfolioManagementPage = () => {
             {filteredItems.map((item) => (
               <Card key={item.id} className="overflow-hidden group">
                 <div className="relative">
-                  <img src={`${API_URL}${item.image}`} alt={item.title} className="h-48 w-full object-cover" />
+                  <img src={`${API_URL}${item.image}`} alt={item.title} className="h-48 w-full object-cover bg-secondary" />
                   <div className="absolute top-2 right-2">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -110,12 +134,10 @@ const PortfolioManagementPage = () => {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => handleEdit(item)}>
-                          <Edit className="mr-2 h-4 w-4" />
-                          <span>Edit</span>
+                          <Edit className="mr-2 h-4 w-4" /><span>Edit</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleDelete(item.id)} className="text-destructive">
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          <span>Delete</span>
+                          <Trash2 className="mr-2 h-4 w-4" /><span>Delete</span>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -130,12 +152,7 @@ const PortfolioManagementPage = () => {
           </div>
         </main>
       </div>
-      <PortfolioForm
-        isOpen={isFormOpen}
-        setIsOpen={setIsFormOpen}
-        item={selectedItem}
-        refreshData={fetchPortfolioItems}
-      />
+      <PortfolioForm isOpen={isFormOpen} setIsOpen={setIsFormOpen} item={selectedItem} refreshData={fetchPortfolioItems} />
     </div>
   );
 };

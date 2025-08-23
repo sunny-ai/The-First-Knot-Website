@@ -5,7 +5,7 @@ import { PlusCircle, FileText, Heart, Users } from "lucide-react";
 import AdminSidebar from "@/components/AdminSidebar";
 import AdminHeader from "@/components/AdminHeader";
 import TotalVisitsChart from "@/components/TotalVisitsChart";
-import PortfolioForm from "./PortfolioForm"; // Make sure this component exists
+import PortfolioForm from "./PortfolioForm"; // Import the form component
 
 const AdminDashboard = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
