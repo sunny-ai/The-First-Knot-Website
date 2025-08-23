@@ -5,6 +5,7 @@ from .views import (
     TestimonialViewSet,
     ContactSubmissionViewSet,
     StyleQuizSubmissionViewSet,
+    StatsView,
 )
 
 router = DefaultRouter()
@@ -14,5 +15,6 @@ router.register(r'contact', ContactSubmissionViewSet)
 router.register(r'style-quiz', StyleQuizSubmissionViewSet)
 
 urlpatterns = [
+    path('stats/', StatsView.as_view({'get': 'list'}), name='stats'),
     path('', include(router.urls)),
 ]

@@ -1,7 +1,11 @@
+// frontend/src/pages/Portfolio.tsx
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Heart, Star, Calendar, Users } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Card } from "@/components/ui/card";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import Autoplay from 'embla-carousel-autoplay';
 
 interface PortfolioItem {
   id: number;
@@ -21,8 +25,22 @@ interface Testimonial {
 
 const Portfolio = () => {
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
+  const [filteredItems, setFilteredItems] = useState<PortfolioItem[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [categoryFilter, setCategoryFilter] = useState("All");
   const API_URL = import.meta.env.VITE_API_URL;
+
+  const categories = [
+    "All",
+    "Wedding Favours",
+    "Wedding Invites",
+    "Mehndi Favours & Invites",
+    "House Decoration",
+    "Event Management",
+    "Others"
+  ];
+
+  const availableCategories = ["All", ...new Set(portfolioItems.map(item => item.category))];
 
   useEffect(() => {
     // Fetch Portfolio Items
@@ -37,6 +55,16 @@ const Portfolio = () => {
       .then((data) => setTestimonials(data))
       .catch((error) => console.error("Error fetching testimonials:", error));
   }, [API_URL]);
+
+  useEffect(() => {
+    if (categoryFilter === "All") {
+        setFilteredItems(portfolioItems);
+    } else {
+        setFilteredItems(
+            portfolioItems.filter((item) => item.category === categoryFilter)
+        );
+    }
+  }, [categoryFilter, portfolioItems]);
 
   return (
     <div className="pt-20">
@@ -55,18 +83,30 @@ const Portfolio = () => {
       {/* Portfolio Grid */}
       <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-6">
+          <div className="flex justify-center flex-wrap gap-4 mb-12">
+            {availableCategories.map((category) => (
+                <Button
+                    key={category}
+                    variant={categoryFilter === category ? "default" : "outline"}
+                    onClick={() => setCategoryFilter(category)}
+                >
+                    {category}
+                </Button>
+            ))}
+          </div>
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {portfolioItems.map((item, index) => (
-              <div
+            {filteredItems.map((item, index) => (
+              <Card
                 key={item.id}
-                className="bg-card rounded-2xl overflow-hidden shadow-soft hover-lift border"
+                className="rounded-2xl overflow-hidden shadow-soft hover-lift border"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="aspect-[4/3] overflow-hidden">
+                <div className="aspect-[4/3] overflow-hidden group-hover:scale-105 transition-transform duration-300">
                   <img
-                    src={`${API_URL}${item.image}`}
+                    src={item.image}
                     alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                    className="w-full h-full object-cover object-center"
                   />
                 </div>
                 <div className="p-6">
@@ -80,7 +120,7 @@ const Portfolio = () => {
                     {item.description}
                   </p>
                 </div>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
@@ -98,32 +138,48 @@ const Portfolio = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <div
-                key={testimonial.id}
-                className="bg-background/80 backdrop-blur-sm rounded-2xl p-8 shadow-soft border"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="flex mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 text-accent fill-current" />
-                  ))}
-                </div>
-                <p className="text-body text-foreground/80 mb-6 italic">
-                  "{testimonial.text}"
-                </p>
-                <div>
-                  <div className="font-semibold text-foreground">
-                    {testimonial.name}
+          <Carousel
+            opts={{
+              align: "start",
+            }}
+            plugins={[
+              Autoplay({
+                delay: 4000,
+              }),
+            ]}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-1">
+              {testimonials.map((testimonial, index) => (
+                <CarouselItem key={testimonial.id} className="pl-1 md:basis-1/2 lg:basis-1/3">
+                  <div className="p-1">
+                    <div
+                      className="bg-background/80 backdrop-blur-sm rounded-2xl p-8 shadow-soft border"
+                    >
+                      <div className="flex mb-4">
+                        {[...Array(testimonial.rating)].map((_, i) => (
+                          <Star key={i} className="w-5 h-5 text-accent fill-current" />
+                        ))}
+                      </div>
+                      <p className="text-body text-foreground/80 mb-6 italic">
+                        "{testimonial.text}"
+                      </p>
+                      <div>
+                        <div className="font-semibold text-foreground">
+                          {testimonial.name}
+                        </div>
+                        <div className="text-sm text-foreground/60">
+                          {testimonial.event}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-sm text-foreground/60">
-                    {testimonial.event}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
         </div>
       </section>
 

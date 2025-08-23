@@ -1,28 +1,48 @@
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+// frontend/src/pages/AdminDashboard.tsx
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, FileText, Heart, Users } from "lucide-react";
 import AdminSidebar from "@/components/AdminSidebar";
 import AdminHeader from "@/components/AdminHeader";
-import TotalVisitsChart from "@/components/TotalVisitsChart";
-import PortfolioForm from "./PortfolioForm"; // Import the form component
+import PortfolioForm from "./PortfolioForm";
+import { useToast } from "@/hooks/use-toast";
 
 const AdminDashboard = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [stats, setStats] = useState({
+      portfolioItems: 0,
+      testimonials: 0,
+      contactSubmissions: 0,
+      quizSubmissions: 0,
+  });
+  const { toast } = useToast();
+  const API_URL = import.meta.env.VITE_API_URL;
 
-  // In a real application, you would fetch these stats from the backend
-  const stats = {
-      portfolioItems: 12,
-      testimonials: 8,
-      contactSubmissions: 25,
-      quizSubmissions: 15,
-  }
-
-  // This function would be passed down to the form to refresh data after submission
   const fetchDashboardData = () => {
-    // Re-fetch your dashboard stats here
-    console.log("Refreshing dashboard data...");
+    fetch(`${API_URL}/api/stats/`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setStats(data);
+      })
+      .catch(error => {
+        console.error("Error fetching dashboard stats:", error);
+        toast({
+          title: "Error Fetching Stats",
+          description: "Could not load dashboard data from the server.",
+          variant: "destructive"
+        });
+      });
   };
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, [API_URL]);
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -78,45 +98,12 @@ const AdminDashboard = () => {
                 </CardContent>
               </Card>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            <TotalVisitsChart />
-            <Card className="lg:col-span-1">
-              <CardHeader>
-                <CardTitle>My Income</CardTitle>
-              </CardHeader>
-              <CardContent className="flex items-center justify-center">
-                <div className="w-32 h-32 relative">
-                  <svg className="w-full h-full" viewBox="0 0 36 36">
-                    <path
-                      d="M18 2.0845
-                        a 15.9155 15.9155 0 0 1 0 31.831
-                        a 15.9155 15.9155 0 0 1 0 -31.831"
-                      fill="none"
-                      stroke="hsl(var(--secondary))"
-                      strokeWidth="3"
-                    />
-                    <path
-                      d="M18 2.0845
-                        a 15.9155 15.9155 0 0 1 0 31.831"
-                      fill="none"
-                      stroke="hsl(var(--primary))"
-                      strokeWidth="3"
-                      strokeDasharray="46, 100"
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-2xl font-bold">46%</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
         </main>
       </div>
       <PortfolioForm
         isOpen={isFormOpen}
         setIsOpen={setIsFormOpen}
-        item={null} // Pass null to indicate creating a new item
+        item={null}
         refreshData={fetchDashboardData}
       />
     </div>

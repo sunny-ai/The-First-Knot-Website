@@ -4,7 +4,7 @@ import { Heart, LayoutDashboard, FileText, MessageSquare, Users } from "lucide-r
 const AdminSidebar = () => {
   const navItems = [
     { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-    { name: "Portfolio", href: "/admin/portfolio", icon: Heart }, // This link will now work
+    { name: "Portfolio", href: "/admin/portfolio", icon: Heart },
     { name: "Testimonials", href: "/admin/testimonials", icon: MessageSquare },
     { name: "Contact Submissions", href: "/admin/contact-submissions", icon: FileText },
     { name: "Quiz Submissions", href: "/admin/quiz-submissions", icon: Users },

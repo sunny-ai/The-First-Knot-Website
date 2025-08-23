@@ -16,6 +16,9 @@ import StyleQuizPage from "./pages/StyleQuizPage";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import PortfolioManagementPage from "./pages/PortfolioManagementPage";
+import ContactSubmissionsPage from "./pages/ContactSubmissionsPage";
+import TestimonialsManagementPage from "./pages/TestimonialManagementPage";
+import QuizSubmissionsPage from "./pages/StyleQuizSubmissionsPage";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -44,6 +47,9 @@ const App = () => (
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/portfolio" element={<PortfolioManagementPage />} />
+          <Route path="/admin/contact-submissions" element={<ContactSubmissionsPage />} />
+          <Route path="/admin/testimonials" element={<TestimonialsManagementPage />} />
+          <Route path="/admin/quiz-submissions" element={<QuizSubmissionsPage />} />
 
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

@@ -41,7 +41,7 @@ const PortfolioManagementPage = () => {
     fetch(`${API_URL}/api/portfolio/`)
       .then((response) => {
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+          throw new Error('Network response was not ok');
         }
         return response.json();
       })
@@ -52,9 +52,9 @@ const PortfolioManagementPage = () => {
       .catch(error => {
         console.error("Error fetching portfolio items:", error);
         toast({
-            title: "Error Fetching Portfolio",
-            description: "Could not load portfolio items from the server.",
-            variant: "destructive"
+          title: "Error Fetching Portfolio",
+          description: "Could not load portfolio items from the server.",
+          variant: "destructive"
         })
       });
   };
@@ -80,18 +80,18 @@ const PortfolioManagementPage = () => {
 
   const handleDelete = (id) => {
     fetch(`${API_URL}/api/portfolio/${id}/`, { method: 'DELETE' })
-        .then((response) => {
-            if (response.ok) {
-                toast({ title: "Success", description: "Portfolio item deleted." });
-                fetchPortfolioItems();
-            } else {
-                throw new Error('Failed to delete item.');
-            }
-        })
-        .catch(error => {
-            console.error("Error deleting item:", error);
-            toast({ title: "Error", description: "Could not delete portfolio item.", variant: "destructive" });
-        });
+      .then((response) => {
+        if (response.ok) {
+          toast({ title: "Success", description: "Portfolio item deleted." });
+          fetchPortfolioItems();
+        } else {
+          throw new Error('Failed to delete item.');
+        }
+      })
+      .catch(error => {
+        console.error("Error deleting item:", error);
+        toast({ title: "Error", description: "Could not delete portfolio item.", variant: "destructive" });
+      });
   };
 
   return (
@@ -124,7 +124,8 @@ const PortfolioManagementPage = () => {
             {filteredItems.map((item) => (
               <Card key={item.id} className="overflow-hidden group">
                 <div className="relative">
-                  <img src={`${API_URL}${item.image}`} alt={item.title} className="h-48 w-full object-cover bg-secondary" />
+                  <img src={item.image}
+                    alt={item.title} className="h-48 w-full object-cover bg-secondary" />
                   <div className="absolute top-2 right-2">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
