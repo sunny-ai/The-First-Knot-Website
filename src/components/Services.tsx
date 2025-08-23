@@ -76,13 +76,6 @@ const Services = () => {
                   </li>
                 ))}
               </ul>
-              
-              <Button 
-                variant="outline" 
-                className="w-full"
-              >
-                Learn More
-              </Button>
             </div>
           ))}
         </div>
