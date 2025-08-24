@@ -7,6 +7,9 @@ import AdminSidebar from "@/components/AdminSidebar";
 import AdminHeader from "@/components/AdminHeader";
 import PortfolioForm from "./PortfolioForm";
 import { useToast } from "@/hooks/use-toast";
+import CalendarCard from "@/components/CalendarCard";
+import RecentSubmissions from "@/components/RecentSubmissions";
+import RecentQuizSubmissions from "@/components/RecentQuizSubmissions";
 
 const AdminDashboard = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -97,6 +100,13 @@ const AdminDashboard = () => {
                    <p className="text-xs text-muted-foreground">New leads from your style quiz</p>
                 </CardContent>
               </Card>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
+              <RecentSubmissions />
+              <RecentQuizSubmissions />
+            </div>
+            <CalendarCard />
           </div>
         </main>
       </div>
