@@ -1,4 +1,3 @@
-// frontend/src/pages/StyleQuizSubmissionsPage.tsx
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Trash2, Mail } from "lucide-react";
@@ -8,25 +7,19 @@ import AdminHeader from "@/components/AdminHeader";
 import { useToast } from "@/hooks/use-toast";
 import QuizSubmissionDetailDialog from "./QuizSubmissionDetailDialog";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { authenticatedFetch } from "@/lib/api";
+
+const API_URL = 'http://127.0.0.1:8000';
 
 const fetchSubmissions = async () => {
-  const API_URL = import.meta.env.VITE_API_URL;
   if (!API_URL) {
     throw new Error("VITE_API_URL is not set.");
   }
-  const response = await fetch(`${API_URL}/api/style-quiz/`);
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-  return response.json();
+  return authenticatedFetch(`${API_URL}/api/style-quiz/`);
 };
 
 const deleteSubmission = async (id: number) => {
-  const API_URL = import.meta.env.VITE_API_URL;
-  const response = await fetch(`${API_URL}/api/style-quiz/${id}/`, { method: 'DELETE' });
-  if (!response.ok) {
-    throw new Error('Failed to delete submission.');
-  }
+  return authenticatedFetch(`${API_URL}/api/style-quiz/${id}/`, { method: 'DELETE' });
 };
 
 const StyleQuizSubmissionsPage = () => {
@@ -57,7 +50,7 @@ const StyleQuizSubmissionsPage = () => {
     setIsDialogOpen(true);
   };
 
-  const handleEmailSent = (id: number) => {
+  const handleEmailSent = () => {
     queryClient.invalidateQueries({ queryKey: ['quizSubmissions'] });
   };
 

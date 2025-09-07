@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
-import { AuthProvider } from "@/contexts/AuthContext"; // Import AuthProvider
+import { AuthProvider } from "@/contexts/AuthContext";
 
 // Import pages and components
 import Home from "./pages/Home";
@@ -18,9 +18,9 @@ import PortfolioManagementPage from "./pages/PortfolioManagementPage";
 import TestimonialManagementPage from "./pages/TestimonialManagementPage";
 import ContactSubmissionsPage from "./pages/ContactSubmissionsPage";
 import StyleQuizSubmissionsPage from "./pages/StyleQuizSubmissionsPage";
-import LoginPage from "./pages/LoginPage"; // Import LoginPage
-import ProtectedRoute from "./components/ProtectedRoute"; // Import ProtectedRoute
-import MainLayout from "./components/MainLayout"; // Create a simple layout component
+import LoginPage from "./pages/LoginPage";
+import ProtectedRoute from "./components/ProtectedRoute";
+import MainLayout from "./components/MainLayout";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +53,10 @@ function App() {
                 element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>}
               />
               <Route
+                path="/admin/dashboard"
+                element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>}
+              />
+              <Route
                 path="/admin/portfolio"
                 element={<ProtectedRoute><PortfolioManagementPage /></ProtectedRoute>}
               />
@@ -65,7 +69,7 @@ function App() {
                 element={<ProtectedRoute><ContactSubmissionsPage /></ProtectedRoute>}
               />
               <Route
-                path="/admin/style-quiz-submissions"
+                path="/admin/quiz-submissions"
                 element={<ProtectedRoute><StyleQuizSubmissionsPage /></ProtectedRoute>}
               />
 

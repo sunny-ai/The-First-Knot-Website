@@ -1,3 +1,4 @@
+// frontend/src/pages/ContactSubmissionsPage.tsx
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import AdminSidebar from "@/components/AdminSidebar";
 import AdminHeader from "@/components/AdminHeader";
 import { useToast } from "@/hooks/use-toast";
+import { authenticatedFetch } from "@/lib/api"; // Import authenticatedFetch
 
 const statusConfig: { [key: string]: { label: string; color: string } } = {
   new: { label: "New", color: "bg-yellow-500" },
@@ -22,26 +24,15 @@ const statusConfig: { [key: string]: { label: string; color: string } } = {
 
 const fetchSubmissions = async () => {
   const API_URL = import.meta.env.VITE_API_URL;
-  const response = await fetch(`${API_URL}/api/contact/`);
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
-  return response.json();
+  return authenticatedFetch(`${API_URL}/api/contact/`); // Use authenticatedFetch
 };
 
 const updateSubmissionStatus = async ({ id, status }: { id: number; status: string }) => {
   const API_URL = import.meta.env.VITE_API_URL;
-  const response = await fetch(`${API_URL}/api/contact/${id}/`, {
+  return authenticatedFetch(`${API_URL}/api/contact/${id}/`, { // Use authenticatedFetch
     method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify({ status }),
   });
-  if (!response.ok) {
-    throw new Error("Could not update status");
-  }
-  return response.json();
 };
 
 const ContactSubmissionsPage = () => {
