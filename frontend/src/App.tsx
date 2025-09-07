@@ -1,67 +1,83 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
+// frontend/src/App.tsx
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/components/ui/toaster";
+import { AuthProvider } from "@/contexts/AuthContext"; // Import AuthProvider
+
+// Import pages and components
 import Home from "./pages/Home";
 import AboutPage from "./pages/AboutPage";
 import ServicesPage from "./pages/ServicesPage";
 import Portfolio from "./pages/Portfolio";
 import Contact from "./pages/Contact";
-import NotFound from "./pages/NotFound";
-import Navigation from "./components/Navigation";
-import Footer from "./components/Footer";
-import BackToTopButton from "@/components/BackToTopButton";
 import StyleQuizPage from "./pages/StyleQuizPage";
-import AdminLogin from "./pages/AdminLogin";
+import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/AdminDashboard";
 import PortfolioManagementPage from "./pages/PortfolioManagementPage";
+import TestimonialManagementPage from "./pages/TestimonialManagementPage";
 import ContactSubmissionsPage from "./pages/ContactSubmissionsPage";
-import TestimonialsManagementPage from "./pages/TestimonialManagementPage";
-import QuizSubmissionsPage from "./pages/StyleQuizSubmissionsPage";
+import StyleQuizSubmissionsPage from "./pages/StyleQuizSubmissionsPage";
+import LoginPage from "./pages/LoginPage"; // Import LoginPage
+import ProtectedRoute from "./components/ProtectedRoute"; // Import ProtectedRoute
+import MainLayout from "./components/MainLayout"; // Create a simple layout component
 
-// Create a client
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        {/* The regular Navigation and Footer will not render on admin routes */}
-        <Routes>
-          <Route path="/admin/*" element={null} />
-          <Route path="*" element={<Navigation />} />
-        </Routes>
-        
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/services" element={<ServicesPage />} />
-          <Route path="/portfolio" element={<Portfolio />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/style-quiz" element={<StyleQuizPage />} />
-          
-          {/* Admin Routes */}
-          <Route path="/admin" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/portfolio" element={<PortfolioManagementPage />} />
-          <Route path="/admin/contact-submissions" element={<ContactSubmissionsPage />} />
-          <Route path="/admin/testimonials" element={<TestimonialsManagementPage />} />
-          <Route path="/admin/quiz-submissions" element={<QuizSubmissionsPage />} />
-
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-
-        <Routes>
-          <Route path="/admin/*" element={null} />
-          <Route path="*" element={<><Footer /><BackToTopButton /></>} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+// A simple layout for public pages
+const MainLayoutWrapper = ({ children }: { children: React.ReactNode }) => (
+  <MainLayout>{children}</MainLayout>
 );
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <AuthProvider> {/* Wrap everything with AuthProvider */}
+          <Router>
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={<MainLayoutWrapper><Home /></MainLayoutWrapper>} />
+              <Route path="/about" element={<MainLayoutWrapper><AboutPage /></MainLayoutWrapper>} />
+              <Route path="/services" element={<MainLayoutWrapper><ServicesPage /></MainLayoutWrapper>} />
+              <Route path="/portfolio" element={<MainLayoutWrapper><Portfolio /></MainLayoutWrapper>} />
+              <Route path="/contact" element={<MainLayoutWrapper><Contact /></MainLayoutWrapper>} />
+              <Route path="/style-quiz" element={<MainLayoutWrapper><StyleQuizPage /></MainLayoutWrapper>} />
+
+              {/* Authentication Route */}
+              <Route path="/login" element={<LoginPage />} />
+
+              {/* Protected Admin Routes */}
+              <Route
+                path="/admin"
+                element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>}
+              />
+              <Route
+                path="/admin/portfolio"
+                element={<ProtectedRoute><PortfolioManagementPage /></ProtectedRoute>}
+              />
+              <Route
+                path="/admin/testimonials"
+                element={<ProtectedRoute><TestimonialManagementPage /></ProtectedRoute>}
+              />
+              <Route
+                path="/admin/contact-submissions"
+                element={<ProtectedRoute><ContactSubmissionsPage /></ProtectedRoute>}
+              />
+              <Route
+                path="/admin/style-quiz-submissions"
+                element={<ProtectedRoute><StyleQuizSubmissionsPage /></ProtectedRoute>}
+              />
+
+              {/* Not Found Route */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Router>
+        </AuthProvider>
+        <Toaster />
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+}
 
 export default App;

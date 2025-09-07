@@ -1,5 +1,6 @@
 // frontend/src/pages/Portfolio.tsx
 import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Heart, Star, Calendar, Users } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -23,48 +24,44 @@ interface Testimonial {
   rating: number;
 }
 
-const Portfolio = () => {
-  const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
-  const [filteredItems, setFilteredItems] = useState<PortfolioItem[]>([]);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [categoryFilter, setCategoryFilter] = useState("All");
+const fetchPortfolioItems = async (): Promise<PortfolioItem[]> => {
   const API_URL = import.meta.env.VITE_API_URL;
+  const response = await fetch(`${API_URL}/api/portfolio/`);
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+  return response.json();
+};
 
-  const categories = [
-    "All",
-    "Wedding Favours",
-    "Wedding Invites",
-    "Mehndi Favours & Invites",
-    "House Decoration",
-    "Event Management",
-    "Others"
-  ];
+const fetchTestimonials = async (): Promise<Testimonial[]> => {
+  const API_URL = import.meta.env.VITE_API_URL;
+  const response = await fetch(`${API_URL}/api/testimonials/`);
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+  return response.json();
+};
+
+
+const Portfolio = () => {
+  const [categoryFilter, setCategoryFilter] = useState("All");
+
+  const { data: portfolioItems = [], isLoading: isLoadingPortfolio, error: portfolioError } = useQuery({
+    queryKey: ['portfolioItems'],
+    queryFn: fetchPortfolioItems,
+  });
+
+  const { data: testimonials = [], isLoading: isLoadingTestimonials, error: testimonialsError } = useQuery({
+    queryKey: ['testimonials'],
+    queryFn: fetchTestimonials,
+  });
+
+  const filteredItems = categoryFilter === "All"
+    ? portfolioItems
+    : portfolioItems.filter((item) => item.category === categoryFilter);
 
   const availableCategories = ["All", ...new Set(portfolioItems.map(item => item.category))];
 
-  useEffect(() => {
-    // Fetch Portfolio Items
-    fetch(`${API_URL}/api/portfolio/`)
-      .then((response) => response.json())
-      .then((data) => setPortfolioItems(data))
-      .catch((error) => console.error("Error fetching portfolio items:", error));
-
-    // Fetch Testimonials
-    fetch(`${API_URL}/api/testimonials/`)
-      .then((response) => response.json())
-      .then((data) => setTestimonials(data))
-      .catch((error) => console.error("Error fetching testimonials:", error));
-  }, [API_URL]);
-
-  useEffect(() => {
-    if (categoryFilter === "All") {
-        setFilteredItems(portfolioItems);
-    } else {
-        setFilteredItems(
-            portfolioItems.filter((item) => item.category === categoryFilter)
-        );
-    }
-  }, [categoryFilter, portfolioItems]);
 
   return (
     <div className="pt-20">
@@ -96,32 +93,38 @@ const Portfolio = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredItems.map((item, index) => (
-              <Card
-                key={item.id}
-                className="rounded-2xl overflow-hidden shadow-soft hover-lift border"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="aspect-[4/3] overflow-hidden group-hover:scale-105 transition-transform duration-300">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover object-center"
-                  />
-                </div>
-                <div className="p-6">
-                  <div className="text-sm text-accent font-medium mb-2">
-                    {item.category}
+            {isLoadingPortfolio ? (
+              <p>Loading portfolio...</p>
+            ) : portfolioError ? (
+              <p>Error loading portfolio.</p>
+            ) : (
+              filteredItems.map((item, index) => (
+                <Card
+                  key={item.id}
+                  className="rounded-2xl overflow-hidden shadow-soft hover-lift border"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="aspect-[4/3] overflow-hidden group-hover:scale-105 transition-transform duration-300">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-full object-cover object-center"
+                    />
                   </div>
-                  <h3 className="text-heading text-xl mb-3 text-foreground">
-                    {item.title}
-                  </h3>
-                  <p className="text-body text-foreground/70">
-                    {item.description}
-                  </p>
-                </div>
-              </Card>
-            ))}
+                  <div className="p-6">
+                    <div className="text-sm text-accent font-medium mb-2">
+                      {item.category}
+                    </div>
+                    <h3 className="text-heading text-xl mb-3 text-foreground">
+                      {item.title}
+                    </h3>
+                    <p className="text-body text-foreground/70">
+                      {item.description}
+                    </p>
+                  </div>
+                </Card>
+              ))
+            )}
           </div>
         </div>
       </section>
@@ -150,32 +153,38 @@ const Portfolio = () => {
             className="w-full"
           >
             <CarouselContent className="-ml-1">
-              {testimonials.map((testimonial, index) => (
-                <CarouselItem key={testimonial.id} className="pl-1 md:basis-1/2 lg:basis-1/3">
-                  <div className="p-1">
-                    <div
-                      className="bg-background/80 backdrop-blur-sm rounded-2xl p-8 shadow-soft border"
-                    >
-                      <div className="flex mb-4">
-                        {[...Array(testimonial.rating)].map((_, i) => (
-                          <Star key={i} className="w-5 h-5 text-accent fill-current" />
-                        ))}
-                      </div>
-                      <p className="text-body text-foreground/80 mb-6 italic">
-                        "{testimonial.text}"
-                      </p>
-                      <div>
-                        <div className="font-semibold text-foreground">
-                          {testimonial.name}
+              {isLoadingTestimonials ? (
+                <p>Loading testimonials...</p>
+              ) : testimonialsError ? (
+                <p>Error loading testimonials.</p>
+              ) : (
+                testimonials.map((testimonial, index) => (
+                  <CarouselItem key={testimonial.id} className="pl-1 md:basis-1/2 lg:basis-1/3">
+                    <div className="p-1">
+                      <div
+                        className="bg-background/80 backdrop-blur-sm rounded-2xl p-8 shadow-soft border"
+                      >
+                        <div className="flex mb-4">
+                          {[...Array(testimonial.rating)].map((_, i) => (
+                            <Star key={i} className="w-5 h-5 text-accent fill-current" />
+                          ))}
                         </div>
-                        <div className="text-sm text-foreground/60">
-                          {testimonial.event}
+                        <p className="text-body text-foreground/80 mb-6 italic">
+                          "{testimonial.text}"
+                        </p>
+                        <div>
+                          <div className="font-semibold text-foreground">
+                            {testimonial.name}
+                          </div>
+                          <div className="text-sm text-foreground/60">
+                            {testimonial.event}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </CarouselItem>
-              ))}
+                  </CarouselItem>
+                ))
+              )}
             </CarouselContent>
             <CarouselPrevious />
             <CarouselNext />
