@@ -4,66 +4,66 @@
 
 @layer base {
   :root {
-    --background: 350 100% 99%; /* Very Light Pink */
-    --foreground: 350 50% 20%; /* Dark, soft red */
+    --background: 273 27% 95%; /* #F0E9F5 */
+    --foreground: 274 71% 31%; /* #5E1589 */
 
     --card: 0 0% 100%;
-    --card-foreground: 350 50% 20%;
+    --card-foreground: 274 71% 31%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 350 50% 20%;
+    --popover-foreground: 274 71% 31%;
 
-    --primary: 345 100% 60%; /* Bright Pink */
+    --primary: 274 71% 31%; /* #5E1589 */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 350 100% 95%; /* Lighter Pink */
-    --secondary-foreground: 350 50% 20%;
+    --secondary: 273 27% 95%; /* #F0E9F5 */
+    --secondary-foreground: 274 71% 31%;
 
-    --muted: 350 100% 97%;
-    --muted-foreground: 350 50% 40%;
+    --muted: 41 42% 89%; /* #F0E9D7 */
+    --muted-foreground: 274 71% 41%;
 
-    --accent: 345 100% 60%; 
+    --accent: 274 71% 31%; 
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 350 100% 90%;
-    --input: 350 100% 95%;
-    --ring: 345 100% 60%;
+    --border: 273 27% 90%;
+    --input: 273 27% 95%;
+    --ring: 274 71% 31%;
 
     --radius: 0.75rem;
   }
 
   .dark {
     /* A dark theme variation of the new palette */
-    --background: 350 50% 10%;
-    --foreground: 350 100% 98%;
+    --background: 274 71% 10%;
+    --foreground: 273 27% 98%;
 
-    --card: 350 50% 15%;
-    --card-foreground: 350 100% 98%;
+    --card: 274 71% 15%;
+    --card-foreground: 273 27% 98%;
 
-    --popover: 350 50% 10%;
-    --popover-foreground: 350 100% 98%;
+    --popover: 274 71% 10%;
+    --popover-foreground: 273 27% 98%;
 
-    --primary: 345 100% 60%;
+    --primary: 274 71% 60%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 350 100% 20%;
-    --secondary-foreground: 350 100% 98%;
+    --secondary: 273 27% 20%;
+    --secondary-foreground: 273 27% 98%;
 
-    --muted: 350 100% 25%;
-    --muted-foreground: 350 100% 80%;
+    --muted: 41 42% 25%;
+    --muted-foreground: 41 42% 80%;
 
-    --accent: 345 100% 60%;
+    --accent: 274 71% 60%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 350 100% 30%;
-    --input: 350 100% 25%;
-    --ring: 345 100% 60%;
+    --border: 273 27% 30%;
+    --input: 273 27% 25%;
+    --ring: 274 71% 60%;
   }
 }
 
@@ -118,6 +118,15 @@
     to {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+
+  @keyframes rotation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
     }
   }
 }

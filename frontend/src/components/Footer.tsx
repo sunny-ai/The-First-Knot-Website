@@ -1,5 +1,6 @@
-import { Heart, Phone, Mail, MapPin, Instagram, Facebook, Twitter } from "lucide-react";
+import { Instagram, Facebook, Twitter, Phone, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
+import darkLogo from "@/assets/dark.png";
 
 const Footer = () => {
   return (
@@ -9,8 +10,7 @@ const Footer = () => {
           {/* Company Info */}
           <div className="lg:col-span-2">
             <div className="flex items-center mb-6">
-              <Heart className="w-8 h-8 text-primary mr-3" />
-              <h3 className="text-heading text-2xl font-bold">The First Knot</h3>
+              <img src={darkLogo} alt="The First Knot" className="h-40" />
             </div>
             <p className="text-body text-foreground/80 mb-6 max-w-md leading-relaxed">
               From Your First Knot to Forever. Creating timeless memories with elegance, creativity, and cultural richness for your most special moments.

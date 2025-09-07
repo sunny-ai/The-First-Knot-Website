@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import heroVideo from "@/assets/hero-video.mp4"; // Import the local video
+import lightLogo from "@/assets/light.png";
 
 const Hero = () => {
   return (
@@ -20,7 +21,7 @@ const Hero = () => {
         <div className="grid lg:grid-cols-2 gap-12 items-center h-full min-h-[calc(100vh-5rem)]">
           {/* Left Content */}
           <div className="animate-fade-in-up space-y-6">
-            <div className="inline-block bg-secondary px-4 py-2 rounded-full text-sm font-medium text-primary">
+            <div className="inline-block bg-primary px-4 py-2 rounded-full text-sm font-medium text-primary-foreground">
               Inspired by Romance
             </div>
             <h1 className="text-display text-5xl md:text-7xl font-bold text-foreground leading-tight">
@@ -48,6 +49,7 @@ const Hero = () => {
                 className="w-full h-auto object-cover"
               />
             </div>
+            <img src={lightLogo} alt="Rotating Logo" className="absolute bottom-0 right-0 w-40 h-40 animate-rotation transform translate-x-1/2 translate-y-1/2" />
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import lightLogo from "@/assets/light.png";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,12 +18,10 @@ const Navigation = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-primary text-primary-foreground shadow-md">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-33">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <h2 className="text-heading text-2xl font-bold">
-              The First Knot
-            </h2>
+            <img src={lightLogo} alt="The First Knot" className="h-32" />
           </Link>
 
           {/* Desktop Navigation */}
