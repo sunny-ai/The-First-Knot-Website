@@ -198,7 +198,7 @@ const Contact = () => {
                       <Phone className="w-6 h-6 text-accent mr-4" />
                       <div>
                         <div className="font-medium text-foreground">Call Us</div>
-                        <div className="text-foreground/70">+1 (555) 123-4567</div>
+                        <div className="text-foreground/70">+44 7770 763567</div>
                       </div>
                     </div>
                     <div className="flex items-center">
@@ -220,7 +220,7 @@ const Contact = () => {
                 </CardContent>
               </Card>
 
-              <Card className="shadow-soft">
+              {/* <Card className="shadow-soft">
                 <CardHeader>
                   <CardTitle className="text-heading text-2xl text-foreground">
                     Free Consultation
@@ -234,7 +234,7 @@ const Contact = () => {
                     Book Your Consultation
                   </Button>
                 </CardContent>
-              </Card>
+              </Card> */}
 
 
             </div>

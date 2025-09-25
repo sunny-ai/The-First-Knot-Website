@@ -26,3 +26,5 @@ backend/.venv
 *.sw?
 
 backend/.env
+frontend/.env
+frontend/.env.production

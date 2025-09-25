@@ -56,7 +56,7 @@ const Footer = () => {
             <div className="space-y-4">
               <div className="flex items-center">
                 <Phone className="w-5 h-5 text-primary mr-3" />
-                <span className="text-body text-foreground/80">+1 (555) 123-4567</span>
+                <span className="text-body text-foreground/80">+44 7770 763567</span>
               </div>
               <div className="flex items-center">
                 <Mail className="w-5 h-5 text-primary mr-3" />
@@ -70,7 +70,15 @@ const Footer = () => {
         <div className="border-t border-border pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-body text-foreground/70 mb-4 md:mb-0">
-              © 2024 The First Knot. All rights reserved.
+              © 2024 The First Knot. Developed by{" "}
+              <a
+                href="https://foundationf1rst.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-primary transition-colors duration-200"
+              >
+                Foundation F1rst Ltd
+              </a>
             </p>
             <div className="flex space-x-6">
               <Link to="#" className="text-body text-foreground/70 hover:text-primary transition-colors duration-200">
