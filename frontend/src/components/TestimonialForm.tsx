@@ -1,16 +1,36 @@
-// frontend/src/pages/TestimonialForm.tsx
+// frontend/src/components/TestimonialForm.tsx
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { useMutation } from "@tanstack/react-query";
 
 const ratings = [1, 2, 3, 4, 5];
 
-const TestimonialForm = ({ isOpen, setIsOpen, item, refreshData }) => {
+const upsertTestimonial = async ({ item, formData }: { item: any, formData: any }) => {
+  const API_URL = import.meta.env.VITE_API_URL;
+  const url = item ? `${API_URL}/api/testimonials/${item.id}/` : `${API_URL}/api/testimonials/`;
+  const method = item ? 'PUT' : 'POST';
+
+  const response = await fetch(url, {
+    method: method,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(formData),
+  });
+
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return response.json();
+};
+
+const TestimonialForm = ({ isOpen, setIsOpen, item, refreshData }: any) => {
   const [formData, setFormData] = useState({
     name: "",
     event: "",
@@ -18,7 +38,6 @@ const TestimonialForm = ({ isOpen, setIsOpen, item, refreshData }) => {
     rating: 1,
   });
   const { toast } = useToast();
-  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (item) {
@@ -38,43 +57,32 @@ const TestimonialForm = ({ isOpen, setIsOpen, item, refreshData }) => {
     }
   }, [item]);
 
-  const handleChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const url = item ? `${API_URL}/api/testimonials/${item.id}/` : `${API_URL}/api/testimonials/`;
-    const method = item ? 'PUT' : 'POST';
-
-    fetch(url, {
-      method: method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then(() => {
+  const mutation = useMutation({
+    mutationFn: upsertTestimonial,
+    onSuccess: () => {
       toast({
         title: `Testimonial ${item ? 'updated' : 'added'} successfully.`,
       });
       refreshData();
       setIsOpen(false);
-    })
-    .catch(error => {
+    },
+    onError: (error) => {
       console.error('Error submitting form:', error);
       toast({
         title: "Error",
         description: `Could not ${item ? 'update' : 'add'} testimonial.`,
         variant: "destructive",
       });
-    });
+    }
+  });
+
+  const handleChange = (field: string, value: string | number) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    mutation.mutate({ item, formData });
   };
 
   return (
@@ -109,8 +117,8 @@ const TestimonialForm = ({ isOpen, setIsOpen, item, refreshData }) => {
               </SelectContent>
             </Select>
           </div>
-          <Button type="submit" className="w-full">
-            {item ? "Update Testimonial" : "Add Testimonial"}
+          <Button type="submit" className="w-full" disabled={mutation.isPending}>
+            {mutation.isPending ? "Saving..." : (item ? "Update Testimonial" : "Add Testimonial")}
           </Button>
         </form>
       </DialogContent>

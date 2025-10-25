@@ -1,11 +1,11 @@
 // frontend/src/pages/QuizSubmissionDetailDialog.tsx
-import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Mail } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import { useMutation } from "@tanstack/react-query";
 
 const styleResults = {
   "Classic Elegance": {
@@ -62,55 +62,50 @@ const styleResults = {
   },
 };
 
-const QuizSubmissionDetailDialog = ({ isOpen, setIsOpen, submission, onEmailSent }) => {
-  const { toast } = useToast();
-  const [isSending, setIsSending] = useState(false);
+const sendStyleGuideEmail = async (submissionId: number) => {
   const API_URL = import.meta.env.VITE_API_URL;
+  const response = await fetch(`${API_URL}/api/style-quiz/${submissionId}/send_style_guide_email/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (!response.ok) {
+    throw new Error('Failed to send email.');
+  }
+  return response.json();
+};
+
+const QuizSubmissionDetailDialog = ({ isOpen, setIsOpen, submission, onEmailSent }: any) => {
+  const { toast } = useToast();
+
+  const mutation = useMutation({
+    mutationFn: sendStyleGuideEmail,
+    onSuccess: () => {
+      toast({
+        title: "Email Sent",
+        description: "The personalized style guide has been sent to the client.",
+      });
+      onEmailSent(submission.id);
+      setIsOpen(false);
+    },
+    onError: (error) => {
+      console.error('Error sending email:', error);
+      toast({
+        title: "Error",
+        description: "Could not send the email. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
 
   const handleSendEmail = () => {
-    setIsSending(true);
-    // Simulate API call for sending email and updating submission status
-    fetch(`${API_URL}/api/style-quiz/${submission.id}/send_style_guide_email/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to update submission.');
-        }
-        return response.json();
-      })
-      .then(() => {
-        toast({
-          title: "Email Sent",
-          description: "The personalized style guide has been sent to the client.",
-        });
-        onEmailSent(submission.id);
-        setIsOpen(false);
-      })
-      .catch(error => {
-        console.error('Error sending email:', error);
-        toast({
-          title: "Error",
-          description: "Could not send the email. Please try again.",
-          variant: "destructive",
-        });
-      })
-      .finally(() => {
-        setIsSending(false);
-      });
+    mutation.mutate(submission.id);
   };
 
-  const resultDetails = styleResults[submission?.style];
+  const resultDetails = styleResults[submission?.style as keyof typeof styleResults];
 
   return (
-
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
-
         {submission && resultDetails ? (
           <>
             <DialogHeader>
@@ -173,11 +168,11 @@ const QuizSubmissionDetailDialog = ({ isOpen, setIsOpen, submission, onEmailSent
                 </CardContent>
               </Card>
             </div>
-            
+
             <div className="flex justify-end gap-2 mt-4">
-              <Button onClick={handleSendEmail} disabled={submission.email_sent || isSending}>
+              <Button onClick={handleSendEmail} disabled={submission.email_sent || mutation.isPending}>
                 <Mail className="mr-2 h-4 w-4" />
-                {isSending ? "Sending..." : "Send Personalized Guide"}
+                {mutation.isPending ? "Sending..." : "Send Personalized Guide"}
               </Button>
             </div>
           </>

@@ -1,5 +1,5 @@
 // frontend/src/pages/TestimonialManagementPage.tsx
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Star, Trash2, Edit, PlusCircle } from "lucide-react";
@@ -7,64 +7,63 @@ import { Button } from "@/components/ui/button";
 import AdminSidebar from "@/components/AdminSidebar";
 import AdminHeader from "@/components/AdminHeader";
 import { useToast } from "@/hooks/use-toast";
-import TestimonialForm from "./TestimonialForm";
+import TestimonialForm from "@/components/TestimonialForm";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
+const fetchTestimonials = async () => {
+  const API_URL = import.meta.env.VITE_API_URL;
+  if (!API_URL) {
+    throw new Error("VITE_API_URL is not set.");
+  }
+  const response = await fetch(`${API_URL}/api/testimonials/`);
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return response.json();
+};
+
+const deleteTestimonial = async (id: number) => {
+  const API_URL = import.meta.env.VITE_API_URL;
+  const response = await fetch(`${API_URL}/api/testimonials/${id}/`, { method: 'DELETE' });
+  if (!response.ok) {
+    throw new Error('Failed to delete testimonial.');
+  }
+};
 
 const TestimonialManagementPage = () => {
-  const [testimonials, setTestimonials] = useState([]);
+  const queryClient = useQueryClient();
   const { toast } = useToast();
-  const API_URL = import.meta.env.VITE_API_URL;
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
-  const fetchTestimonials = () => {
-    if (!API_URL) {
-      console.error("VITE_API_URL is not set. Please check your frontend/.env file.");
-      return;
+  const { data: testimonials = [], error, isLoading } = useQuery({
+    queryKey: ['testimonials'],
+    queryFn: fetchTestimonials
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteTestimonial,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['testimonials'] });
+      toast({ title: "Success", description: "Testimonial deleted." });
+    },
+    onError: (error) => {
+      console.error("Error deleting testimonial:", error);
+      toast({ title: "Error", description: "Could not delete testimonial.", variant: "destructive" });
     }
-    fetch(`${API_URL}/api/testimonials/`)
-      .then((response) => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setTestimonials(data);
-      })
-      .catch(error => {
-        console.error("Error fetching testimonials:", error);
-        toast({
-            title: "Error Fetching Testimonials",
-            description: "Could not load testimonials from the server.",
-            variant: "destructive"
-        })
-      });
-  };
+  });
 
-  useEffect(() => {
-    fetchTestimonials();
-  }, [API_URL]);
-
-  const handleEdit = (item) => {
+  const handleEdit = (item: any) => {
     setSelectedItem(item);
     setIsFormOpen(true);
   };
 
-  const handleDelete = (id) => {
-    fetch(`${API_URL}/api/testimonials/${id}/`, { method: 'DELETE' })
-        .then((response) => {
-            if (response.ok) {
-                toast({ title: "Success", description: "Testimonial deleted." });
-                fetchTestimonials();
-            } else {
-                throw new Error('Failed to delete testimonial.');
-            }
-        })
-        .catch(error => {
-            console.error("Error deleting item:", error);
-            toast({ title: "Error", description: "Could not delete testimonial.", variant: "destructive" });
-        });
+  const handleDelete = (id: number) => {
+    deleteMutation.mutate(id);
   };
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error fetching testimonials.</div>;
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -98,7 +97,7 @@ const TestimonialManagementPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {testimonials.map((testimonial) => (
+                  {testimonials.map((testimonial: any) => (
                     <TableRow key={testimonial.id}>
                       <TableCell className="font-medium">{testimonial.name}</TableCell>
                       <TableCell className="text-muted-foreground">{testimonial.event}</TableCell>
@@ -139,7 +138,7 @@ const TestimonialManagementPage = () => {
           </Card>
         </main>
       </div>
-      <TestimonialForm isOpen={isFormOpen} setIsOpen={setIsFormOpen} item={selectedItem} refreshData={fetchTestimonials} />
+      <TestimonialForm isOpen={isFormOpen} setIsOpen={setIsFormOpen} item={selectedItem} refreshData={() => queryClient.invalidateQueries({ queryKey: ['testimonials'] })} />
     </div>
   );
 };

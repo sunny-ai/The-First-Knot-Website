@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Link } from 'react-router-dom';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from "@/hooks/use-toast";
+import { useMutation } from '@tanstack/react-query';
 
 const quizQuestions = [
   {
@@ -108,6 +109,20 @@ const styleResults = {
   },
 };
 
+const submitQuizForm = async (submissionData: any) => {
+  const API_URL = import.meta.env.VITE_API_URL;
+  const response = await fetch(`${API_URL}/api/style-quiz/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(submissionData),
+  });
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return response.json();
+};
 
 const StyleQuizPage = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -127,6 +142,26 @@ const StyleQuizPage = () => {
     address: "",
   });
 
+  const mutation = useMutation({
+    mutationFn: submitQuizForm,
+    onSuccess: () => {
+      toast({
+        title: "Style Guide Sent!",
+        description: "Check your inbox for your personalized wedding style guide.",
+      });
+      setFormData({ name: "", email: "", phone: "", address: ""});
+      setIsFormOpen(false);
+    },
+    onError: (error) => {
+      toast({
+        title: "Error!",
+        description: "There was a problem sending your results. Please try again later.",
+        variant: "destructive",
+      });
+      console.error('Error submitting form:', error);
+    }
+  });
+
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
@@ -144,42 +179,13 @@ const StyleQuizPage = () => {
   const getResult = () => {
     return Object.keys(scores).reduce((a, b) => scores[a as keyof typeof scores] > scores[b as keyof typeof scores] ? a : b);
   };
-  
+
   const finalResultStyle = getResult() as keyof typeof styleResults;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const submissionData = { ...formData, style: finalResultStyle };
-
-    fetch(`${import.meta.env.VITE_API_URL}/api/style-quiz/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(submissionData),
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        toast({
-          title: "Style Guide Sent!",
-          description: "Check your inbox for your personalized wedding style guide.",
-        });
-        setFormData({ name: "", email: "", phone: "", address: ""});
-        setIsFormOpen(false);
-    })
-    .catch(error => {
-        toast({
-          title: "Error!",
-          description: "There was a problem sending your results. Please try again later.",
-          variant: "destructive",
-        });
-        console.error('Error submitting form:', error);
-    });
+    mutation.mutate(submissionData);
   };
 
   const restartQuiz = () => {
@@ -253,7 +259,7 @@ const StyleQuizPage = () => {
                       </div>
                     </div>
                   </Card>
-                  
+
                   <div className="grid md:grid-cols-2 gap-8">
                     <Card className="p-6">
                       <h3 className="text-heading text-xl mb-4 text-foreground text-center">Key Elements:</h3>
@@ -312,7 +318,9 @@ const StyleQuizPage = () => {
             </div>
           </div>
           <DialogFooter className="justify-center">
-              <Button type="submit">Send to My Email</Button>
+              <Button type="submit" disabled={mutation.isPending}>
+                {mutation.isPending ? "Sending..." : "Send to My Email"}
+              </Button>
           </DialogFooter>
           </form>
         </DialogContent>

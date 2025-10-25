@@ -1,3 +1,4 @@
+// frontend/src/pages/PortfolioManagementPage.tsx
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,6 +14,7 @@ import AdminSidebar from "@/components/AdminSidebar";
 import AdminHeader from "@/components/AdminHeader";
 import PortfolioForm from "./PortfolioForm";
 import { useToast } from "@/hooks/use-toast";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const categories = [
   "All",
@@ -24,75 +26,66 @@ const categories = [
   "Others"
 ];
 
+const fetchPortfolioItems = async () => {
+  const API_URL = import.meta.env.VITE_API_URL;
+  if (!API_URL) {
+    throw new Error("VITE_API_URL is not set. Please check your frontend/.env file.");
+  }
+  const response = await fetch(`${API_URL}/api/portfolio/`);
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return response.json();
+};
+
+const deletePortfolioItem = async (id: number) => {
+  const API_URL = import.meta.env.VITE_API_URL;
+  const response = await fetch(`${API_URL}/api/portfolio/${id}/`, { method: 'DELETE' });
+  if (!response.ok) {
+    throw new Error('Failed to delete item.');
+  }
+};
+
 const PortfolioManagementPage = () => {
-  const [portfolioItems, setPortfolioItems] = useState([]);
-  const [filteredItems, setFilteredItems] = useState([]);
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [categoryFilter, setCategoryFilter] = useState("All");
-  const { toast } = useToast();
-  const API_URL = import.meta.env.VITE_API_URL;
 
-  const fetchPortfolioItems = () => {
-    if (!API_URL) {
-      console.error("VITE_API_URL is not set. Please check your frontend/.env file.");
-      return;
+  const { data: portfolioItems = [], error, isLoading } = useQuery({
+    queryKey: ['portfolioItems'],
+    queryFn: fetchPortfolioItems,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deletePortfolioItem,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['portfolioItems'] });
+      toast({ title: "Success", description: "Portfolio item deleted." });
+    },
+    onError: (error) => {
+      console.error("Error deleting item:", error);
+      toast({ title: "Error", description: "Could not delete portfolio item.", variant: "destructive" });
     }
-    fetch(`${API_URL}/api/portfolio/`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setPortfolioItems(data);
-        setFilteredItems(data);
-      })
-      .catch(error => {
-        console.error("Error fetching portfolio items:", error);
-        toast({
-          title: "Error Fetching Portfolio",
-          description: "Could not load portfolio items from the server.",
-          variant: "destructive"
-        })
-      });
-  };
+  });
 
-  useEffect(() => {
-    fetchPortfolioItems();
-  }, [API_URL]);
 
-  useEffect(() => {
-    if (categoryFilter === "All") {
-      setFilteredItems(portfolioItems);
-    } else {
-      setFilteredItems(
-        portfolioItems.filter((item) => item.category === categoryFilter)
-      );
-    }
-  }, [categoryFilter, portfolioItems]);
+  const filteredItems = categoryFilter === "All"
+    ? portfolioItems
+    : portfolioItems.filter((item: any) => item.category === categoryFilter);
 
-  const handleEdit = (item) => {
+  const handleEdit = (item: any) => {
     setSelectedItem(item);
     setIsFormOpen(true);
   };
 
-  const handleDelete = (id) => {
-    fetch(`${API_URL}/api/portfolio/${id}/`, { method: 'DELETE' })
-      .then((response) => {
-        if (response.ok) {
-          toast({ title: "Success", description: "Portfolio item deleted." });
-          fetchPortfolioItems();
-        } else {
-          throw new Error('Failed to delete item.');
-        }
-      })
-      .catch(error => {
-        console.error("Error deleting item:", error);
-        toast({ title: "Error", description: "Could not delete portfolio item.", variant: "destructive" });
-      });
+  const handleDelete = (id: number) => {
+    deleteMutation.mutate(id);
   };
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error fetching portfolio items.</div>;
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -121,7 +114,7 @@ const PortfolioManagementPage = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredItems.map((item) => (
+            {filteredItems.map((item: any) => (
               <Card key={item.id} className="overflow-hidden group">
                 <div className="relative">
                   <img src={item.image}
@@ -153,7 +146,7 @@ const PortfolioManagementPage = () => {
           </div>
         </main>
       </div>
-      <PortfolioForm isOpen={isFormOpen} setIsOpen={setIsFormOpen} item={selectedItem} refreshData={fetchPortfolioItems} />
+      <PortfolioForm isOpen={isFormOpen} setIsOpen={setIsFormOpen} item={selectedItem} refreshData={() => queryClient.invalidateQueries({ queryKey: ['portfolioItems'] })} />
     </div>
   );
 };

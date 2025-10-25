@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -7,6 +8,21 @@ import { Phone, Mail, MapPin, Clock, Heart, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const submitContactForm = async (formData: any) => {
+  const API_URL = import.meta.env.VITE_API_URL;
+  const response = await fetch(`${API_URL}/api/contact/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(formData),
+  });
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return response.json();
+};
 
 const Contact = () => {
   const { toast } = useToast();
@@ -19,42 +35,34 @@ const Contact = () => {
     message: ""
   });
 
+  const mutation = useMutation({
+    mutationFn: submitContactForm,
+    onSuccess: () => {
+      toast({
+        title: "Message Sent!",
+        description: "Thank you for reaching out. We'll get back to you within 24 hours.",
+      });
+      setFormData({
+        name: "", email: "", phone: "", event_date: "", event_type: "", message: ""
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error!",
+        description: "There was a problem sending your message. Please try again later.",
+        variant: "destructive",
+      });
+      console.error('Error submitting form:', error);
+    }
+  });
+
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    fetch(`${import.meta.env.VITE_API_URL}/api/contact/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        toast({
-          title: "Message Sent!",
-          description: "Thank you for reaching out. We'll get back to you within 24 hours.",
-        });
-        setFormData({
-            name: "", email: "", phone: "", event_date: "", event_type: "", message: ""
-        });
-    })
-    .catch(error => {
-        toast({
-          title: "Error!",
-          description: "There was a problem sending your message. Please try again later.",
-          variant: "destructive",
-        });
-        console.error('Error submitting form:', error);
-    });
+    mutation.mutate(formData);
   };
 
   return (
@@ -168,9 +176,9 @@ const Contact = () => {
                     />
                   </div>
 
-                  <Button type="submit" className="w-full btn-primary text-lg py-4">
+                  <Button type="submit" className="w-full btn-primary text-lg py-4" disabled={mutation.isPending}>
                     <Send className="w-5 h-5 mr-2" />
-                    Send Message
+                    {mutation.isPending ? "Sending..." : "Send Message"}
                   </Button>
                 </form>
               </CardContent>
@@ -190,7 +198,7 @@ const Contact = () => {
                       <Phone className="w-6 h-6 text-accent mr-4" />
                       <div>
                         <div className="font-medium text-foreground">Call Us</div>
-                        <div className="text-foreground/70">+1 (555) 123-4567</div>
+                        <div className="text-foreground/70">+44 7770 763567</div>
                       </div>
                     </div>
                     <div className="flex items-center">
@@ -200,7 +208,7 @@ const Contact = () => {
                         <div className="text-foreground/70">hello@thefirstknot.com</div>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center">
                       <Clock className="w-6 h-6 text-accent mr-4" />
                       <div>
@@ -211,8 +219,8 @@ const Contact = () => {
                   </div>
                 </CardContent>
               </Card>
-              
-              <Card className="shadow-soft">
+
+              {/* <Card className="shadow-soft">
                 <CardHeader>
                   <CardTitle className="text-heading text-2xl text-foreground">
                     Free Consultation
@@ -226,9 +234,9 @@ const Contact = () => {
                     Book Your Consultation
                   </Button>
                 </CardContent>
-              </Card>
+              </Card> */}
 
-              
+
             </div>
           </div>
         </div>
@@ -240,7 +248,7 @@ const Contact = () => {
           <h2 className="text-display text-4xl md:text-5xl mb-12 text-center text-foreground">
             Frequently Asked Questions
           </h2>
-          
+
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1">
               <AccordionTrigger>How far in advance should we book your services?</AccordionTrigger>

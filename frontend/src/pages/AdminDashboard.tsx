@@ -1,5 +1,6 @@
 // frontend/src/pages/AdminDashboard.tsx
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, FileText, Heart, Users } from "lucide-react";
@@ -11,41 +12,40 @@ import CalendarCard from "@/components/CalendarCard";
 import RecentSubmissions from "@/components/RecentSubmissions";
 import RecentQuizSubmissions from "@/components/RecentQuizSubmissions";
 
+
+import { authenticatedFetch } from "@/lib/api"; // Import the new fetch function
+
+const fetchDashboardData = async () => {
+  const API_URL = import.meta.env.VITE_API_URL;
+  if (!API_URL) {
+    throw new Error("VITE_API_URL is not set.");
+  }
+  return authenticatedFetch(`${API_URL}/api/stats/`); // Use the new function
+};
+
 const AdminDashboard = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [stats, setStats] = useState({
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const { data: stats, error, isLoading } = useQuery({
+    queryKey: ['dashboardStats'],
+    queryFn: fetchDashboardData,
+    initialData: {
       portfolioItems: 0,
       testimonials: 0,
       contactSubmissions: 0,
       quizSubmissions: 0,
+    }
   });
-  const { toast } = useToast();
-  const API_URL = import.meta.env.VITE_API_URL;
 
-  const fetchDashboardData = () => {
-    fetch(`${API_URL}/api/stats/`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        setStats(data);
-      })
-      .catch(error => {
-        console.error("Error fetching dashboard stats:", error);
-        toast({
-          title: "Error Fetching Stats",
-          description: "Could not load dashboard data from the server.",
-          variant: "destructive"
-        });
-      });
-  };
-
-  useEffect(() => {
-    fetchDashboardData();
-  }, [API_URL]);
+  if (error) {
+    toast({
+      title: "Error Fetching Stats",
+      description: "Could not load dashboard data from the server.",
+      variant: "destructive"
+    });
+  }
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -66,7 +66,7 @@ const AdminDashboard = () => {
                   <Heart className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{stats.portfolioItems}</div>
+                  <div className="text-2xl font-bold">{isLoading ? '...' : stats.portfolioItems}</div>
                   <p className="text-xs text-muted-foreground">Manage your beautiful work</p>
                 </CardContent>
               </Card>
@@ -76,7 +76,7 @@ const AdminDashboard = () => {
                   <Users className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{stats.testimonials}</div>
+                  <div className="text-2xl font-bold">{isLoading ? '...' : stats.testimonials}</div>
                    <p className="text-xs text-muted-foreground">What your clients are saying</p>
                 </CardContent>
               </Card>
@@ -86,7 +86,7 @@ const AdminDashboard = () => {
                    <FileText className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{stats.contactSubmissions}</div>
+                  <div className="text-2xl font-bold">{isLoading ? '...' : stats.contactSubmissions}</div>
                    <p className="text-xs text-muted-foreground">New leads from your contact form</p>
                 </CardContent>
               </Card>
@@ -96,7 +96,7 @@ const AdminDashboard = () => {
                    <FileText className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{stats.quizSubmissions}</div>
+                  <div className="text-2xl font-bold">{isLoading ? '...' : stats.quizSubmissions}</div>
                    <p className="text-xs text-muted-foreground">New leads from your style quiz</p>
                 </CardContent>
               </Card>
@@ -114,7 +114,7 @@ const AdminDashboard = () => {
         isOpen={isFormOpen}
         setIsOpen={setIsFormOpen}
         item={null}
-        refreshData={fetchDashboardData}
+        refreshData={() => queryClient.invalidateQueries({ queryKey: ['dashboardStats'] })}
       />
     </div>
   );

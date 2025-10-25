@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { useMutation } from "@tanstack/react-query";
 
 const categories = [
   "Wedding Favours",
@@ -15,7 +16,23 @@ const categories = [
   "Others"
 ];
 
-const PortfolioForm = ({ isOpen, setIsOpen, item, refreshData }) => {
+const upsertPortfolioItem = async ({ item, formData }: { item: any, formData: FormData }) => {
+  const API_URL = import.meta.env.VITE_API_URL;
+  const url = item ? `${API_URL}/api/portfolio/${item.id}/` : `${API_URL}/api/portfolio/`;
+  const method = item ? 'PUT' : 'POST';
+
+  const response = await fetch(url, {
+    method: method,
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return response.json();
+}
+
+const PortfolioForm = ({ isOpen, setIsOpen, item, refreshData }: any) => {
   const [formData, setFormData] = useState({
     title: "",
     category: "",
@@ -23,7 +40,6 @@ const PortfolioForm = ({ isOpen, setIsOpen, item, refreshData }) => {
     image: null,
   });
   const { toast } = useToast();
-  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (item) {
@@ -43,18 +59,37 @@ const PortfolioForm = ({ isOpen, setIsOpen, item, refreshData }) => {
     }
   }, [item]);
 
-  const handleChange = (field, value) => {
+  const mutation = useMutation({
+    mutationFn: upsertPortfolioItem,
+    onSuccess: () => {
+      toast({
+        title: `Portfolio item ${item ? 'updated' : 'created'} successfully.`,
+      });
+      refreshData();
+      setIsOpen(false);
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: `Could not ${item ? 'update' : 'add'} portfolio item.`,
+        variant: "destructive",
+      });
+    }
+  });
+
+
+  const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleFileChange = (e) => {
-    setFormData((prev) => ({ ...prev, image: e.target.files[0] }));
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFormData((prev) => ({ ...prev, image: e.target.files?.[0] || null }));
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const url = item ? `${API_URL}/api/portfolio/${item.id}/` : `${API_URL}/api/portfolio/`;
-    const method = item ? 'PUT' : 'POST';
 
     const postData = new FormData();
     postData.append('title', formData.title);
@@ -64,18 +99,7 @@ const PortfolioForm = ({ isOpen, setIsOpen, item, refreshData }) => {
       postData.append('image', formData.image);
     }
 
-    fetch(url, {
-      method: method,
-      body: postData,
-    })
-    .then(response => response.json())
-    .then(() => {
-      toast({
-        title: `Portfolio item ${item ? 'updated' : 'created'} successfully.`,
-      });
-      refreshData();
-      setIsOpen(false);
-    });
+    mutation.mutate({ item, formData: postData });
   };
 
   return (
@@ -110,8 +134,8 @@ const PortfolioForm = ({ isOpen, setIsOpen, item, refreshData }) => {
             <label className="block text-foreground font-medium mb-2">Image</label>
             <Input type="file" onChange={handleFileChange} />
           </div>
-          <Button type="submit" className="w-full">
-            {item ? "Update Item" : "Add Item"}
+          <Button type="submit" className="w-full" disabled={mutation.isPending}>
+            {mutation.isPending ? "Saving..." : (item ? "Update Item" : "Add Item")}
           </Button>
         </form>
       </DialogContent>

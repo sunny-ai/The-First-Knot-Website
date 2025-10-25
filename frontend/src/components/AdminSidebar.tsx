@@ -1,3 +1,4 @@
+// frontend/src/components/AdminSidebar.tsx
 import { Link, useNavigate } from "react-router-dom";
 import {
   Heart,
@@ -7,8 +8,10 @@ import {
   Users,
   LogOut,
 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext"; // Import useAuth
 
 const AdminSidebar = () => {
+  const { logout } = useAuth(); // Destructure logout from useAuth
   const navItems = [
     { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
     { name: "Portfolio", href: "/admin/portfolio", icon: Heart },
@@ -23,9 +26,8 @@ const AdminSidebar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // In a real app, you'd clear the auth token here
-    console.log("Logging out...");
-    navigate("/admin");
+    logout(); // Call the logout function from your auth context
+    navigate("/login"); // Redirect to the login page
   };
 
   return (

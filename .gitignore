@@ -24,3 +24,10 @@ backend/.venv
 *.njsproj
 *.sln
 *.sw?
+
+__pycache__/
+*.pyc
+
+backend/.env
+frontend/.env
+frontend/.env.production

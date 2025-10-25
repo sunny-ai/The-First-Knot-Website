@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+// frontend/src/pages/ContactSubmissionsPage.tsx
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MoreHorizontal } from "lucide-react";
@@ -12,48 +13,54 @@ import { Badge } from "@/components/ui/badge";
 import AdminSidebar from "@/components/AdminSidebar";
 import AdminHeader from "@/components/AdminHeader";
 import { useToast } from "@/hooks/use-toast";
+import { authenticatedFetch } from "@/lib/api"; // Import authenticatedFetch
 
-const statusConfig = {
+const statusConfig: { [key: string]: { label: string; color: string } } = {
   new: { label: "New", color: "bg-yellow-500" },
   contacted: { label: "Contacted", color: "bg-gray-500" },
   confirmed: { label: "Confirmed", color: "bg-green-500" },
   no_response: { label: "No Response", color: "bg-red-500" },
 };
 
-const ContactSubmissionsPage = () => {
-  const [submissions, setSubmissions] = useState([]);
-  const { toast } = useToast();
+const fetchSubmissions = async () => {
   const API_URL = import.meta.env.VITE_API_URL;
+  return authenticatedFetch(`${API_URL}/api/contact/`); // Use authenticatedFetch
+};
 
-  const fetchSubmissions = () => {
-    fetch(`${API_URL}/api/contact/`)
-      .then((response) => response.json())
-      .then((data) => setSubmissions(data))
-      .catch((error) => console.error("Error fetching submissions:", error));
-  };
+const updateSubmissionStatus = async ({ id, status }: { id: number; status: string }) => {
+  const API_URL = import.meta.env.VITE_API_URL;
+  return authenticatedFetch(`${API_URL}/api/contact/${id}/`, { // Use authenticatedFetch
+    method: 'PATCH',
+    body: JSON.stringify({ status }),
+  });
+};
 
-  useEffect(() => {
-    fetchSubmissions();
-  }, [API_URL]);
+const ContactSubmissionsPage = () => {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
 
-  const handleStatusChange = (id, status) => {
-    fetch(`${API_URL}/api/contact/${id}/`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ status }),
-    })
-    .then(response => response.json())
-    .then(() => {
+  const { data: submissions = [], isLoading, error } = useQuery({
+    queryKey: ['contactSubmissions'],
+    queryFn: fetchSubmissions
+  });
+
+  const mutation = useMutation({
+    mutationFn: updateSubmissionStatus,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['contactSubmissions'] });
       toast({ title: "Success", description: "Status updated." });
-      fetchSubmissions();
-    })
-    .catch(error => {
-      console.error("Error updating status:", error);
+    },
+    onError: () => {
       toast({ title: "Error", description: "Could not update status.", variant: "destructive" });
-    });
+    }
+  });
+
+  const handleStatusChange = (id: number, status: string) => {
+    mutation.mutate({ id, status });
   };
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading submissions.</div>;
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -76,7 +83,7 @@ const ContactSubmissionsPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {submissions.map((submission) => (
+                  {submissions.map((submission: any) => (
                     <tr key={submission.id}>
                       <td className="p-4">{submission.name}</td>
                       <td className="p-4">{submission.email}</td>
